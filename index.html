@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caleb De La Cruz P.</title>
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
+
+    <style type="text/css">
+        body {
+            font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background: #2e7bcf;
+            transition:all 1s ease;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        h1 {
+            color: #fff;
+        }
+
+        .blue-2 {
+            font-size: 30px;
+            font-weight: normal;
+            line-height: 1;
+            color: #9ddcff;
+        }
+
+        footer.page-footer {
+            background: rgba(0, 0, 0, 0);
+            padding-bottom: 30px;
+        }
+
+        #quote-box {
+            opacity: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        #quote-box a {
+            color: black;
+            font-style: italic;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script>
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="container">
+            <h1 class=""><b class="blue-2">I'm a </b>Software Engineer</h1>
+            <div id="quote-box">
+                <p><span id="quote"></span><br> ―  
+                    <a id="book" href="">
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer">
+      <div class="container">
+        <span class="blue-2">Caleb De La Cruz P.</span>
+        <span class="blue-2 grey-text text-lighten-4 right">
+            <a title="Twitter" href="https://twitter.com/delacruzp" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a title="Resume" href="resume.pdf" target="_blank"><i class="far fa-file-pdf"></i></a>
+            <a title="Medium" href="https://medium.com/@delacruzp" target="_blank"><i class="fab fa-medium-m"></i></a>
+            <!-- <a title="Github" href="https://github.com/delacruzp" target="_blank"><i class="far fa-file-pdf"></i></a> -->
+        </so>
+      </div>
+    </footer>
+         
+    <script type="text/javascript">
+        var idx = 0;
+
+        var quotes = [
+            {
+                quote: 'My shame circuits burned out from overuse years ago.',
+                book: 'This book is full of spiders',
+                link: 'https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders'
+            }, {
+                quote: 'F**k you. This is my house. I make the rules. You take your clothes off. John, get the Twister mat.',
+                book: 'This book is full of spiders',
+                link: 'https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders'
+            },  {
+                quote: '...in love we find out who we want to be; in war we find out who we are.',
+                book: 'Kristin Hannah, The Nightingale',
+                link: 'https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders'
+            },  {
+                quote: 'Wounds heal. Love lasts. We remain.',
+                book: 'Kristin Hannah, The Nightingale',
+                link: 'https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders'
+            }, {
+                quote: 'If you’re going through hell, keep going.',
+                book: 'Kristin Hannah, The Nightingale',
+                link: 'https://www.goodreads.com/book/show/12924261-this-book-is-full-of-spiders'
+            },  {
+                quote: `When I am inside writing,
+                all I can think about is how I should be outside living.
+                When I am outside living,
+                all I can do is notice all there is to write about.`,
+                book: 'Sarah Kay, No Matter the Wreckage',
+                link: 'https://www.goodreads.com/book/show/18288210-no-matter-the-wreckage'
+            },  {
+                quote: `If loving you means getting dirty, bring on the grime.`,
+                book: 'Sarah Kay, No Matter the Wreckage',
+                link: 'https://www.goodreads.com/book/show/18288210-no-matter-the-wreckage'
+            },  {
+                quote: `A minute of pain is worth a lifetime of glory.`,
+                book: 'Pete Zamperini, Unbroken',
+                link: 'https://www.goodreads.com/book/show/8664353-unbroken'
+            }
+        ];
+
+        function shuffleArray(array) {
+            // Reference: https://stackoverflow.com/a/12646864/1354478
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+ 
+        function refresh() {
+            $("#quote-box").animate({'opacity': 0}, 1000, function() {
+                document.getElementById('quote').innerText = quotes[idx].quote
+                document.getElementById('book').innerText = quotes[idx].book        
+                document.getElementById('book').href = quotes[idx].link        
+                idx = ++idx % quotes.length
+            })
+            .animate({'opacity': 1}, 1000);;
+        }
+
+        shuffleArray(quotes)
+
+        $(function() {
+            refresh()
+            setInterval(refresh, 10000)
+        }) 
+    </script>   
+</body>
+</html>
