@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Temperature: Forecast Vs Real</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.js"></script>
+</head>
+<body>
+
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <h1 class="header center orange-text">BOX: Temperature Extraction</h1>
+      <div class="row center">
+        <h5 class="header col s12 light"></h5>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div id="main" style="width: 1000px;height:500px;"></div>
+  </div>
+  <script>
+    // based on prepared DOM, initialize echarts instance
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // specify chart configuration item and data
+    function type(d, _, columns) {
+      d.date = new Date(d.date);
+      for (var i = 1, n = columns.length, c; i < n; ++i) 
+        d[c = columns[i]] = +d[c];
+      return d;
+    }
+
+    d3.csv("Temps.csv", type, function(error, data) {
+      if (error) throw error;
+
+      let lines = [];
+      let tmpLines = data.columns.slice(1).map(function(id) {
+        return {
+          name: id,
+          type:'line',
+          data: data.map(function(d) {
+            var now = d.date;
+            var date = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/');
+          
+            return [date, d[id]];
+          })
+        };
+      });
+
+      legend = tmpLines.map(x => x.name)
+    
+      tmpLines.forEach((line) => {
+        lines.push(line);
+      })
+
+      console.log(lines)
+      option = {
+          title: {
+              text: 'Temperature',
+              subtext: 'Taunton, MA'
+          },
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              data: legend
+          },
+          toolbox: {
+              show: true,
+              feature: {
+                  dataZoom: {
+                      yAxisIndex: 'none'
+                  },
+                  dataView: {readOnly: false},
+                  // magicType: {type: ['line', 'bar']},
+                  restore: {},
+                  saveAsImage: {}
+              }
+          },
+          xAxis:  {
+              type: 'time',
+              boundaryGap: false,
+              splitLine: {
+                show: false
+              }
+          },
+          yAxis: {
+              type: 'value',
+              axisLabel: {
+                  formatter: '{value} °F'
+              }
+          },
+          series: lines
+      };
+
+      // use configuration item and data specified to show chart
+      myChart.setOption(option);
+    });      
+  </script>
+</body>
