@@ -29,13 +29,14 @@
 
     // specify chart configuration item and data
     function type(d, _, columns) {
-      d.date = new Date(d.date);
+      console.log(d.Date)
+      d.Date = new Date(d.Date);
       for (var i = 1, n = columns.length, c; i < n; ++i) 
         d[c = columns[i]] = +d[c];
       return d;
     }
 
-    d3.csv("Temps.csv", type, function(error, data) {
+    d3.csv("data.csv", type, function(error, data) {
       if (error) throw error;
 
       let lines = [];
@@ -44,7 +45,7 @@
           name: id,
           type:'line',
           data: data.map(function(d) {
-            var now = d.date;
+            var now = d.Date;
             var date = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/');
           
             return [date, d[id]];
