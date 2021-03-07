@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <title>The Hunt</title>
+    <meta name="description" content="Searching for Ice Scream in San Jose, CA">
+    <link rel="icon" href="img/c3.png" sizes="32x32" type="image/png">
+
+
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script async defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script>
+  
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+  <header></header>
+  <main>
+
+      <div class="container">
+          <h1 class="blue-text">The Hunt</h1>
+          <h5>Licking every Ice Cream shop in San Jose!</h5>
+          <div class="progress light-blue lighten-4">
+              <div class="determinate blue" style="width: {{progress}}%"></div>
+          </div>
+
+          <div class="row">
+            <div class="col s2 m2" ng-repeat="shop in shops" >   
+              <div class="col-content">
+                <div class="card">
+                <div class="card-image">
+                  <img ng-if="!visited.has(shop.id)" src="img/placeholder.png">
+                  <img ng-if="visited.has(shop.id)" src="img/blue.jpg">
+                  <span class="card-title {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
+                  <a class="btn-floating halfway-fab waves-effect waves-light light-blue" 
+                    href="https://www.google.com/maps/search/{{shop.name}}" 
+                    target="_blank" rel="noopener noreferrer"><i class="material-icons">location_on</i></a>
+                </div>
+                <!-- <div class="card-stacked"> -->
+                  <!-- <div class="card-content">                   -->
+                    <!-- <p>{{shop.name}}</p> -->
+                  <!-- </div> -->
+                  <div class="card-action">
+                    <!-- <a class="waves-effect waves-light btn">visit</a> -->
+                    <a ng-click="visit(shop.id)" ng-if="!visited.has(shop.id)">Visit</a>
+
+                    <a ng-click="unvisit(shop.id)" ng-if="visited.has(shop.id)">Visited</a>
+                    <!-- <a >Site</a> -->
+                  </div>
+                <!-- </div> -->
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col s12 m6"> 
+              <div class="card">
+                <div class="card-image">
+                  <img src="images/sample-1.jpg">
+                  <span class="card-title">Card Title</span>
+                  <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                </div>
+                <div class="card-content">
+                  <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+                </div>
+              </div>
+            </div> -->
+          </div>
+      </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <div class="container">
+      <a ng-click="signin()">Sign In</a>
+    </div>
+  </footer>       
+
+  <script type="text/javascript">
+    // Initialize the Firebase SDK
+    var firebaseConfig = {
+      apiKey: "AIzaSyC3tfoCPAuhcObi8hyi_4-YTl4tkzqFaAw",
+      authDomain: "the-hunt-a36a9.firebaseapp.com",      
+      databaseURL: "the-hunt-a36a9-default-rtdb.firebaseio.com"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    var app = angular.module("myApp", ["firebase"]);
+    app.controller("myCtrl", function($scope, $firebaseObject, $firebaseArray, $firebaseAuth) {
+      let db = null;
+      var shops = [
+          {
+            "id": 1,
+            "name": "Campbell Creamery",
+            "map": "73P3+VW Campbell, California",
+            "website": "https://www.campbellcreameryca.com/"
+          },
+          {
+            "id": 2,
+            "name": "Nox Cookie Bar",
+            "map": "84M6+HW San Jose, California",
+            "website": "http://www.noxcookiebar.com/"
+          },
+          {
+            "id": 3,
+            "name": "Yogurtland",
+            "map": "84M8+67 San Jose, California",
+            "website": "http://places.singleplatform.com/yogurtland-44/menu?ref=google"
+          },
+          {
+            "id": 4,
+            "name": "San Jose Candy Kitchen",
+            "map": "84M6+4V San Jose, California",
+            "website": "https://www.ordersjcandykitchen.com/"
+          },
+          {
+            "id": 5,
+            "name": "Sweet Retreat",
+            "map": "742R+2X San Jose, California",
+            "website": "http://www.sweet-retreats.com/"
+          },
+          {
+            "id": 6,
+            "name": "My Milkshake",
+            "map": "84M6+JV San Jose, California",
+            "website": "http://www.mymilkshakesj.com/"
+          },
+          {
+            "id": 7,
+            "name": "La Original Paleteria y Neveria",
+            "map": "8498+8G San Jose, California",
+            "website": "http://www.laoriginalpaleteria.net/"
+          },
+          {
+            "id": 8,
+            "name": "Milk + Ice",
+            "map": "74R9+6Q San Jose, California",
+            "website": "https://www.ubereats.com/san-francisco/food-delivery/milk%2Bice/cpkVeXh9Rw-FZXoUm1xiwQ?utm_source=google&utm_medium=organic&utm_campaign=place-action-link"
+          },
+          {
+            "id": 9,
+            "name": "Golden State Ice Cream",
+            "map": "83CQ+XQ San Jose, California",
+            "website": "http://www.goldenstateicecream.com/"
+          },
+          {
+            "id": 10,
+            "name": "Sweet Rendezvous",
+            "map": "65X3+PM San Jose, California",
+            "website": "http://sweetrendezvous.net/"
+          },
+          {
+            "id": 11,
+            "name": "Frozen Ninja",
+            "map": "94WG+V9 San Jose, California",
+            "website": "https://www.doordash.com/store/frozen-ninja-san-jose-786733/en-US/?utm_campaign=gpa"
+          },
+          {
+            "id": 12,
+            "name": "Willow Glen Creamery",
+            "map": "835X+8P San Jose, California",
+            "website": "https://www.willowglencreameryca.com/"
+          },
+          {
+            "id": 13,
+            "name": "Sweet Fix Creamery",
+            "map": "95C5+G4 San Jose, California",
+            "website": "https://www.sweetfixcreamery.com/"
+          },
+          {
+            "id": 14,
+            "name": "Marco Polo Italian Ice Cream",
+            "map": "84JV+M8 San Jose, California",
+            "website": "https://www.vietnamtownonline.com/directory-store/marco-polo-italian-ice-cream"
+          },
+          {
+            "id": 15,
+            "name": "Treat Ice Cream Co",
+            "map": "84VH+Q2 San Jose, California",
+            "website": "http://places.singleplatform.com/treat-ice-cream-co/menu?ref=google"
+          },
+          {
+            "id": 16,
+            "name": "Celsius Ice Cream",
+            "map": "C49G+3C Milpitas, California",
+            "website": "http://www.celsiusicecream.com/"
+          },
+          {
+            "id": 17,
+            "name": "Smitten Ice Cream",
+            "map": "83C2+78 San Jose, California",
+            "website": "https://www.smittenicecream.com/locations/santana-row/"
+          },
+          {
+            "id": 18,
+            "name": "Rocko's Ice Cream Tacos",
+            "map": "83W6+6X Santa Clara, California",
+            "website": "http://www.rockosicecreamtacos.com/"
+          },
+          {
+            "id": 19,
+            "name": "Real Ice Cream",
+            "map": "924C+C8 Santa Clara, California",
+            "website": "http://realicecream.net/"
+          },
+          {
+            "id": 20,
+            "name": "Honey Creme",
+            "map": "C39M+MM Milpitas, California",
+            "website": "http://places.singleplatform.com/honey-creme/menu?ref=google"
+          },
+      ];
+      
+      $scope.shops = shops;
+      $scope.visited = new Set();
+      updateProgress();      
+
+      $scope.visit = function(id) {
+        $scope.visited.add(id);
+        updateProgress();
+        window.localStorage.setItem('visited', JSON.stringify(Array.from($scope.visited)));
+        if (db) {
+          db[id] = true;
+          db.$save().then(function(ref) {
+            console.log("added record with id " + ref);
+          }, function(error) {
+            console.log("Error:", error);
+          });
+        }
+      }
+
+      $scope.unvisit = function(id) {
+        $scope.visited.delete(id);
+        updateProgress();
+        window.localStorage.setItem('visited', JSON.stringify(Array.from($scope.visited)));
+        if (db) {
+          delete db[id];
+          db.$save().then(function(ref) {
+            console.log("added record with id " + ref);
+          }, function(error) {
+            console.log("Error:", error);
+          });
+        }
+      }
+
+      function updateProgress() {
+        $scope.progress = Math.floor(100*$scope.visited.size/$scope.shops.length);
+      }
+
+      $scope.signin = function() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        auth.$signInWithPopup(provider);
+      }
+
+      function onSignedIn(id) {
+        console.log("onSignedIn - fetch")
+        const ref = firebase.database().ref().child(id);
+        db = $firebaseObject(ref);
+        console.log("onSignedIn - fetching")
+
+        if ($scope.visited.length > 0) {
+          for (let key in $scope.visited) {
+            db[key] = true;
+          }
+          db.$save().then(function(ref) {
+            console.log("added record with id " + ref);
+          }, function(error) {
+            console.log("Error:", error);
+          });
+          console.log("Synced current state")
+        }
+      }
+
+      function sync() {
+        if (!db) {
+          console.err("sync - no db")
+          return;
+        }
+        db.$loaded()
+        .then(function(data) {  
+          console.log("sync - loaded", data);        
+          
+          angular.forEach(data, function(value, key) {
+              console.log("sync - value", value, 'key', key);        
+              $scope.visited.add(parseInt(key));
+              updateProgress();
+              console.log("sync - visited", $scope.visited);        
+          });
+          console.log("sync - visited - the end", $scope.visited);        
+          window.localStorage.setItem('visited', JSON.stringify(Array.from($scope.visited)));
+        })
+        .catch(function(error) {
+          console.error("Error:", error);
+        });
+      }
+
+      const auth = $firebaseAuth();
+      auth.$onAuthStateChanged(function(firebaseUser) {
+        if (firebaseUser) {
+          console.log("Signed in as:", firebaseUser.uid);
+          onSignedIn(firebaseUser.uid);
+          sync();
+        } else {
+          console.log("Signed out");
+          const visitedArray = JSON.parse(window.localStorage.getItem('visited'));
+          $scope.visited = new Set(visitedArray);
+        }        
+      });
+    });
+  </script>   
+</body>
+</html>

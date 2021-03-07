@@ -1,0 +1,41 @@
+body {
+    font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    /*background: #2e7bcf;*/
+    transition:all 1s ease;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/*h1 {
+    color: #fff;
+}*/
+
+.blue-2 {
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 1;
+    color: #9ddcff;
+}
+
+footer.page-footer {
+    background: rgba(0, 0, 0, 0);
+    padding-bottom: 30px;
+}
+
+#quote-box {
+    opacity: 0;
+    font-family: 'Quicksand', sans-serif;
+}
+
+#quote-box a {
+    color: black;
+    font-style: italic;
+}
+.card.verysmall {
+    height: 246px;
+}
