@@ -36,7 +36,7 @@
           </div>
 
           <div class="row">
-            <div class="col s2 m2" ng-repeat="shop in shops" >   
+            <div class="col s6 m4 l3 xl2" ng-repeat="shop in shops" >   
               <div class="col-content">
                 <div class="card">
                 <div class="card-image">
@@ -81,7 +81,7 @@
 
   <footer class="page-footer">
     <div class="container">
-      <a ng-click="signin()">Sign In</a>
+      <a ng-click="signin()" ng-if="!signedin">Sign In</a>
     </div>
   </footer>       
 
@@ -305,12 +305,15 @@
       }
 
       const auth = $firebaseAuth();
+      $scope.signedin = false;
       auth.$onAuthStateChanged(function(firebaseUser) {
         if (firebaseUser) {
+          $scope.signedin = true;
           console.log("Signed in as:", firebaseUser.uid);
           onSignedIn(firebaseUser.uid);
           sync();
         } else {
+          $scope.signedin = false;
           console.log("Signed out");
           const visitedArray = JSON.parse(window.localStorage.getItem('visited'));
           $scope.visited = new Set(visitedArray);
