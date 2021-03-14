@@ -32,8 +32,19 @@
   <header></header>
   <main>
       <div class="container">
-          <h1 class="blue-text">The Hunt</h1>
-          <h5>Licking every Ice Cream shop in San Jose!</h5>
+          <div class="row">
+            <div class="col s12 m10">
+              <h1 class="blue-text">The Hunt</h1>
+              <h5 class="blue-text">Licking every Ice Cream shop in San Jose!</h5>              
+            </div>
+            <div class="col s12 m2">
+              <div class="blue-text welcome-text">
+                <a ng-click="signin()" ng-if="!signedin" href="">Sign In</a>
+                <span ng-if="signedin">Hi, {{name}}!</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="progress light-blue lighten-4">
               <div class="determinate blue" style="width: {{progress}}%"></div>
           </div>
@@ -53,36 +64,13 @@
                     <li><span><a href="{{shop.website}}" target="_blank" rel="noopener noreferrer"><i class="material-icons right">open_in_new</i>Website</a></span></li>                      
                   </ul>
                 </div>
-                  <!-- <div class="card-action green">
-                    <a ng-click="visit(shop.id)" ng-if="!visited.has(shop.id)">Visit</a>
-                    <a ng-click="unvisit(shop.id)" ng-if="visited.has(shop.id)">Visited</a>
-                  </div> -->
-                <!-- </div> -->
                 </div>
               </div>
             </div>
-            <!-- <div class="col s12 m6"> 
-              <div class="card">
-                <div class="card-image">
-                  <img src="images/sample-1.jpg">
-                  <span class="card-title">Card Title</span>
-                  <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                </div>
-                <div class="card-content">
-                  <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-                </div>
-              </div>
-            </div> -->
           </div>
       </div>
-
   </main>
-
-  <footer class="page-footer">
-    <div class="container">
-      <a ng-click="signin()" ng-if="!signedin">Sign In</a>
-    </div>
-  </footer>       
+    
 
   <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function() {
@@ -322,11 +310,13 @@
       auth.$onAuthStateChanged(function(firebaseUser) {
         if (firebaseUser) {
           $scope.signedin = true;
-          console.log("Signed in as:", firebaseUser.uid);
+          $scope.name = firebaseUser.displayName.split(' ')[0];
+          console.log("Signed in as:", firebaseUser.uid, firebaseUser);          
           onSignedIn(firebaseUser.uid);
           sync();
         } else {
           $scope.signedin = false;
+          $scope.name = "";
           console.log("Signed out");
           const visitedArray = JSON.parse(window.localStorage.getItem('visited'));
           $scope.visited = new Set(visitedArray);
