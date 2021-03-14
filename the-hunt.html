@@ -3,6 +3,9 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
+    <meta http-equiv="last-modified" content="Sun, 14 Mar 2021 14:00:46 GMT " />
+    <meta http-equiv="cache-control" content="Private" />
+    <meta http-equiv="Expires" content="600" />
 
     <title>The Hunt</title>
     <meta name="description" content="Searching for Ice Scream in San Jose, CA">
@@ -35,15 +38,14 @@
               <div class="determinate blue" style="width: {{progress}}%"></div>
           </div>
           <div class="row">
-            <div class="col s6 m4 l3 xl3 shops" ng-repeat="shop in shops" >   
-              <div class="col-content  blue blue-text">
+            <div class="col s6 m6 l4 xl3 shops" ng-repeat="shop in shops" >   
+              <div class="col-content blue blue-text">
                 <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5' : ''}}">
                 <div class="card-image">
-
                   <div ng-click="toggle(shop.id)">
                     <img ng-if="!visited.has(shop.id)" src="img/placeholder.png">
                     <img ng-if="visited.has(shop.id)" src="img/blue.jpg">
-                    <span class="card-title {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
+                    <span class="card-title responsive {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
                   </div>
                   <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'><i class="material-icons">more_vert</i></a>                  
                   <ul id='dropdown1' class='dropdown-content'>
@@ -55,8 +57,6 @@
                     <a ng-click="visit(shop.id)" ng-if="!visited.has(shop.id)">Visit</a>
                     <a ng-click="unvisit(shop.id)" ng-if="visited.has(shop.id)">Visited</a>
                   </div> -->
-                  
-
                 <!-- </div> -->
                 </div>
               </div>
@@ -85,22 +85,6 @@
   </footer>       
 
   <script type="text/javascript">
-      // Check if a new cache is available on page load.
-      window.addEventListener('load', function(e) {
-        window.applicationCache.addEventListener('updateready', function(e) {
-          if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-            // Browser downloaded a new app cache.
-            // Swap it in and reload the page to get the new hotness.
-            window.applicationCache.swapCache();
-            if (confirm('A new version of this site is available. Load it?')) {
-              window.location.reload();
-            }
-          } else {
-            // Manifest didn't changed. Nothing new to server.
-          }
-        }, false);
-      }, false);
-
       document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.dropdown-trigger');
         var instances = M.Dropdown.init(elems, {alignment: 'right', constrainWidth: false});

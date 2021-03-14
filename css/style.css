@@ -65,3 +65,24 @@ footer.page-footer {
 .row .col.shops {
     padding: 3%;
 }
+
+.row .col.s6.shops {
+    padding: 6%;
+}
+
+@media only screen and (max-width: 701px){
+  .card.z-depth-5.blueish {
+    -webkit-box-shadow: 0 16px 24px 2px rgb(15 138 242 / 30%), 0 6px 30px 5px rgb(15 138 242 / 30%), 0 8px 10px -7px rgb(15 138 242 / 30%);
+    box-shadow: 0 16px 24px 2px rgb(15 138 242 / 30%), 0 6px 30px 5px rgb(15 138 242 / 30%), 0 8px 10px -7px rgb(15 138 242 / 30%);
+  }
+
+  .card .card-title.responsive {
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+ /* .card.z-depth-5.blueish {
+    -webkit-box-shadow: 0 8px 17px 2px rgb(15 138 242 / 50%), 0 3px 14px 2px rgb(15 138 242 / 50%), 0 5px 5px -3px rgb(15 138 242 / 50%);
+    box-shadow: 0 8px 17px 2px rgb(15 138 242 / 50%), 0 3px 14px 2px rgb(15 138 242 / 50%), 0 5px 5px -3px rgb(15 138 242 / 50%);
+  }*/
+}
