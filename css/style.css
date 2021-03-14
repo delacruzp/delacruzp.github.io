@@ -11,10 +11,6 @@ main {
     flex: 1 0 auto;
 }
 
-/*h1 {
-    color: #fff;
-}*/
-
 .blue-2 {
     font-size: 30px;
     font-weight: normal;
@@ -38,4 +34,34 @@ footer.page-footer {
 }
 .card.verysmall {
     height: 246px;
+}
+
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.fixed-action-btn.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.card.z-depth-custom {
+    box-shadow: 0 2px 2px 0 blue, 0 3px 1px -2px blue, 0 1px 5px 0 blue;
+}
+
+.card.z-depth-3.blueish {
+    -webkit-box-shadow: 0 8px 17px 2px rgb(15 138 242 / 14%), 0 3px 14px 2px rgb(15 138 242 / 12%), 0 5px 5px -3px rgb(15 138 242 / 20%);
+    box-shadow: 0 8px 17px 2px rgb(15 138 242 / 14%), 0 3px 14px 2px rgb(15 138 242 / 12%), 0 5px 5px -3px rgb(15 138 242 / 20%);
+}
+
+.card.z-depth-5.blueish {
+    -webkit-box-shadow: 0 24px 38px 3px rgb(15 138 242 / 31%), 0 9px 46px 8px rgb(15 138 242 / 30%), 0 11px 15px -7px rgb(15 138 242 / 30%);
+    box-shadow: 0 24px 38px 3px rgb(15 138 242 / 31%), 0 9px 46px 8px rgb(15 138 242 / 30%), 0 11px 15px -7px rgb(15 138 242 / 30%);
+}
+
+.row .col.shops {
+    padding: 3%;
 }

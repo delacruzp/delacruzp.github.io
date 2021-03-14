@@ -15,9 +15,10 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <script async defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script>
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     
@@ -27,37 +28,35 @@
 <body ng-app="myApp" ng-controller="myCtrl">
   <header></header>
   <main>
-
       <div class="container">
           <h1 class="blue-text">The Hunt</h1>
           <h5>Licking every Ice Cream shop in San Jose!</h5>
           <div class="progress light-blue lighten-4">
               <div class="determinate blue" style="width: {{progress}}%"></div>
           </div>
-
           <div class="row">
-            <div class="col s6 m4 l3 xl2" ng-repeat="shop in shops" >   
-              <div class="col-content">
-                <div class="card">
+            <div class="col s6 m4 l3 xl3 shops" ng-repeat="shop in shops" >   
+              <div class="col-content  blue blue-text">
+                <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5' : ''}}">
                 <div class="card-image">
-                  <img ng-if="!visited.has(shop.id)" src="img/placeholder.png">
-                  <img ng-if="visited.has(shop.id)" src="img/blue.jpg">
-                  <span class="card-title {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
-                  <a class="btn-floating halfway-fab waves-effect waves-light light-blue" 
-                    href="https://www.google.com/maps/search/{{shop.name}}" 
-                    target="_blank" rel="noopener noreferrer"><i class="material-icons">location_on</i></a>
-                </div>
-                <!-- <div class="card-stacked"> -->
-                  <!-- <div class="card-content">                   -->
-                    <!-- <p>{{shop.name}}</p> -->
-                  <!-- </div> -->
-                  <div class="card-action">
-                    <!-- <a class="waves-effect waves-light btn">visit</a> -->
-                    <a ng-click="visit(shop.id)" ng-if="!visited.has(shop.id)">Visit</a>
 
-                    <a ng-click="unvisit(shop.id)" ng-if="visited.has(shop.id)">Visited</a>
-                    <!-- <a >Site</a> -->
+                  <div ng-click="toggle(shop.id)">
+                    <img ng-if="!visited.has(shop.id)" src="img/placeholder.png">
+                    <img ng-if="visited.has(shop.id)" src="img/blue.jpg">
+                    <span class="card-title {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
                   </div>
+                  <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'><i class="material-icons">more_vert</i></a>                  
+                  <ul id='dropdown1' class='dropdown-content'>
+                    <li><span><a href="https://www.google.com/maps/search/{{shop.name}}" target="_blank" rel="noopener noreferrer"><i class="material-icons right">location_on</i>Directions</a></span></li>
+                    <li><span><a href="{{shop.website}}" target="_blank" rel="noopener noreferrer"><i class="material-icons right">open_in_new</i>Website</a></span></li>                      
+                  </ul>
+                </div>
+                  <!-- <div class="card-action green">
+                    <a ng-click="visit(shop.id)" ng-if="!visited.has(shop.id)">Visit</a>
+                    <a ng-click="unvisit(shop.id)" ng-if="visited.has(shop.id)">Visited</a>
+                  </div> -->
+                  
+
                 <!-- </div> -->
                 </div>
               </div>
@@ -86,6 +85,12 @@
   </footer>       
 
   <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.dropdown-trigger');
+        var instances = M.Dropdown.init(elems, {alignment: 'right', constrainWidth: false});
+      });    
+
+
     // Initialize the Firebase SDK
     var firebaseConfig = {
       apiKey: "AIzaSyC3tfoCPAuhcObi8hyi_4-YTl4tkzqFaAw",
@@ -224,6 +229,14 @@
       $scope.shops = shops;
       $scope.visited = new Set();
       updateProgress();      
+
+      $scope.toggle = function(id) {
+        if ($scope.visited.has(id)) {
+          $scope.unvisit(id);
+        } else {
+          $scope.visit(id);
+        }
+      }
 
       $scope.visit = function(id) {
         $scope.visited.add(id);
