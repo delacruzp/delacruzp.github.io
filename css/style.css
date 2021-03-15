@@ -69,6 +69,7 @@ footer.page-footer {
 
 .welcome-text {
     margin-top: 2.8rem; 
+    margin-bottom: -2.8rem;
 }
 
 .card img {
@@ -96,6 +97,22 @@ footer.page-footer {
     /*text-shadow: 1px 1px 5px #2196f3;*/
 }
 
+/* Set the size of the div element that contains the map */
+#map {
+  height: 800px;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+}
+
+/*a > i {
+  vertical-align:middle;
+}
+*/
+.inline-icon {
+   vertical-align: bottom;
+   font-size: 18px !important;
+}
 
 @media only screen and (max-width: 701px){
   .card.z-depth-5.blueish {
