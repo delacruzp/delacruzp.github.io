@@ -217,12 +217,16 @@
     // Initialize and add the map
     let svgMarkerBlue;
     let svgMarkerRed;
-    let map;
+    let mapResolve;
+    const mapPromise = new Promise((resolve, reject) => {
+      mapResolve = resolve;
+    });
+
     function initMap() {
       // The location of Uluru
       const SJ = { lat: 37.341863, lng: -121.8972637 };
       // The map, centered at Uluru
-      map = new google.maps.Map(document.getElementById("map"), {
+      const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 12,
         center: SJ,
       });
@@ -246,6 +250,7 @@
         scale: 2,
         anchor: new google.maps.Point(15, 30),
       };
+      mapResolve(map);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -361,13 +366,14 @@
       }
 
       function updateMarkers() {
-        let infowindow = new google.maps.InfoWindow();
-        console.log(map);
-        shops.forEach(store => {
-          if (store.loc.length == 2) {
-            addMarker(map, {lat:store.loc[0],lng:store.loc[1]}, $scope.visited.has(store.id), store.name, infowindow);
-          }
-        });        
+        mapPromise.then(map => {
+          let infowindow = new google.maps.InfoWindow();
+          shops.forEach(store => {
+            if (store.loc.length == 2) {
+              addMarker(map, {lat:store.loc[0],lng:store.loc[1]}, $scope.visited.has(store.id), store.name, infowindow);
+            }
+          });
+        });
       }
 
       function addMarker(map, location, visited, name, infowindow) {
@@ -405,6 +411,7 @@
           console.log("Signed out");
           const visitedArray = JSON.parse(window.localStorage.getItem('visited'));
           $scope.visited = new Set(visitedArray);
+          updateMarkers();
         }        
       });
     });
