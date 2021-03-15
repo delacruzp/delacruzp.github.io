@@ -19,7 +19,6 @@
     <script async defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 
@@ -51,12 +50,11 @@
           <div class="row">
             <div class="col s6 m6 l4 xl3 shops" ng-repeat="shop in shops" >   
               <div class="col-content blue blue-text">
-                <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5' : ''}}">
+                <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5 visited' : 'pending'}}">
                 <div class="card-image">
-                  <div ng-click="toggle(shop.id)">
-                    <img ng-if="!visited.has(shop.id)" src="img/placeholder.png">
-                    <img ng-if="visited.has(shop.id)" src="img/blue.jpg">
-                    <span class="card-title responsive {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>
+                  <div class="img-wrapper" ng-click="toggle(shop.id)">
+                    <img src="{{shop.img || 'img/blue.jpg'}}">
+                    <span class="card-title responsive blue-text">{{shop.name}}</span>                    
                   </div>
                   <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'><i class="material-icons">more_vert</i></a>                  
                   <ul id='dropdown1' class='dropdown-content'>
@@ -126,7 +124,8 @@
             "id": 6,
             "name": "My Milkshake",
             "map": "84M6+JV San Jose, California",
-            "website": "http://www.mymilkshakesj.com/"
+            "website": "http://www.mymilkshakesj.com/",
+            "img": "https://i.ibb.co/nRhkbpc/PXL-20201017-215229402.jpg"
           },
           {
             "id": 7,
@@ -150,7 +149,8 @@
             "id": 10,
             "name": "Sweet Rendezvous",
             "map": "65X3+PM San Jose, California",
-            "website": "http://sweetrendezvous.net/"
+            "website": "http://sweetrendezvous.net/",
+            "img": "https://i.ibb.co/bXnPWzr/PXL-20210308-011139316.jpg"
           },
           {
             "id": 11,
@@ -198,7 +198,8 @@
             "id": 18,
             "name": "Rocko's Ice Cream Tacos",
             "map": "83W6+6X Santa Clara, California",
-            "website": "http://www.rockosicecreamtacos.com/"
+            "website": "http://www.rockosicecreamtacos.com/",
+            "img": "https://i.ibb.co/9TjNVq5/PXL-20210315-003744630-PORTRAIT.jpg"
           },
           {
             "id": 19,
