@@ -50,7 +50,7 @@
               <div class="col-content blue blue-text">
                 <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5 visited' : 'pending'}}">
                 <div class="card-image">
-                  <div class="img-wrapper" ng-click="toggle(shop.id)">
+                  <div class="img-wrapper" ng-click="toggle(shop)">
                     <img src="{{shop.img || 'img/blue.jpg'}}">
                     <span class="card-title responsive blue-text">{{shop.name}}</span>                    
                   </div>
@@ -286,20 +286,21 @@
       $scope.visited = new Set();
       updateProgress();      
 
-      $scope.toggle = function(id) {
-        if ($scope.visited.has(id)) {
-          $scope.unvisit(id);
+      $scope.toggle = function(shop) {
+        if ($scope.visited.has(shop.id)) {
+          $scope.unvisit(shop);
         } else {
-          $scope.visit(id);
+          $scope.visit(shop);
         }
       }
 
-      $scope.visit = function(id) {
-        $scope.visited.add(id);
+      $scope.visit = function(shop) {
+        $scope.visited.add(shop.id);
         updateProgress();
         window.localStorage.setItem('visited', JSON.stringify(Array.from($scope.visited)));
+        shop.marker.setIcon(svgMarkerBlue);
         if (db) {
-          db[id] = true;
+          db[shop.id] = true;
           db.$save().then(function(ref) {
             console.log("added record with id " + ref);
           }, function(error) {
@@ -308,12 +309,13 @@
         }
       }
 
-      $scope.unvisit = function(id) {
-        $scope.visited.delete(id);
+      $scope.unvisit = function(shop) {
+        $scope.visited.delete(shop.id);
         updateProgress();
         window.localStorage.setItem('visited', JSON.stringify(Array.from($scope.visited)));
+        shop.marker.setIcon(svgMarkerRed);
         if (db) {
-          delete db[id];
+          delete db[shop.id];
           db.$save().then(function(ref) {
             console.log("added record with id " + ref);
           }, function(error) {
@@ -359,7 +361,6 @@
         db.$loaded()
         .then(function(data) {  
           console.log("sync - loaded", data);        
-          
           angular.forEach(data, function(value, key) {
               console.log("sync - value", value, 'key', key);        
               $scope.visited.add(parseInt(key));
@@ -380,21 +381,21 @@
           let infowindow = new google.maps.InfoWindow();
           shops.forEach(store => {
             if (store.loc.length == 2) {
-              addMarker(map, {lat:store.loc[0],lng:store.loc[1]}, $scope.visited.has(store.id), store.name, infowindow);
+              addMarker(store, map, {lat:store.loc[0],lng:store.loc[1]}, $scope.visited.has(store.id), store.name, infowindow);
             }
           });
         });
       }
 
-      function addMarker(map, location, visited, name, infowindow) {
+      function addMarker(store, map, location, visited, name, infowindow) {
         console.log(name)
         let marker;
         marker = new google.maps.Marker({
           map,
           position: location,
           icon: visited ? svgMarkerBlue : svgMarkerRed,
-          // label: name
         });
+        store['marker'] = marker;
         google.maps.event.addListener(marker, "click", () => {
           infowindow.setContent(`
             <a href="https://www.google.com/maps/search/${name}" target="_blank" rel="noopener noreferrer">
