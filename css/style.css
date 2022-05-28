@@ -54,8 +54,9 @@ footer.page-footer {
 }
 
 .card.z-depth-3.blueish {
-    -webkit-box-shadow: 0 8px 17px 2px rgb(15 138 242 / 14%), 0 3px 14px 2px rgb(15 138 242 / 12%), 0 5px 5px -3px rgb(15 138 242 / 20%);
-    box-shadow: 0 8px 17px 2px rgb(15 138 242 / 14%), 0 3px 14px 2px rgb(15 138 242 / 12%), 0 5px 5px -3px rgb(15 138 242 / 20%);
+    -webkit-box-shadow: 0 8px 17px 2px rgb(15 138 242 / 40%), 0 3px 14px 2px rgb(15 138 242 / 30%), 0 5px 5px -3px rgb(15 138 242 / 20%);
+    box-shadow: 0 8px 17px 2px rgb(15 138 242 / 40%), 0 3px 14px 2px rgb(15 138 242 / 30%), 0 5px 5px -3px rgb(15 138 242 / 20%);
+    /*box-shadow: 2px 4px 6px rgb(15 138 242 / 40%), -2px -4px 6px rgb(15 138 242 / 40%);*/
 }
 
 .card.z-depth-5.blueish {
@@ -64,7 +65,7 @@ footer.page-footer {
 }
 
 .row .col.shops {
-    padding: 3%;
+    padding: 1%;
 }
 
 .welcome-text {
@@ -89,7 +90,7 @@ footer.page-footer {
 .card.pending img {
     transition: opacity 0.5s;
     -webkit-transition: opacity 0.5s;
-    opacity: 0.3;
+    opacity: 0.1;
 }
 
 .card.visited .card-title {
@@ -114,6 +115,52 @@ footer.page-footer {
    font-size: 18px !important;
 }
 
+body > main > div.progress {
+ margin-top: 0px;   
+}
+
+body.dark div.card {
+    background-color: #0f8af2;
+}
+
+body.dark div.blue-text {
+    color: white!important;
+}
+
+body.dark div.card {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: #0f8af2;
+}
+
+body.dark > main > nav {
+    background-color: #0f8af2;
+    -webkit-transition: background-color 1000ms ease-out;
+    -ms-transition: background-color 1000ms ease-out;
+    transition: background-color 1000ms ease-out;
+}
+
+body.light > main > nav {
+    background-color: white;
+    -webkit-transition: background-color 1000ms ease-out;
+    -ms-transition: background-color 1000ms ease-out;
+    transition: background-color 1000ms ease-out;
+}
+
+body.dark {
+    background-color: #0f8af2;
+    -webkit-transition: background-color 1000ms ease-out;
+    -ms-transition: background-color 1000ms ease-out;
+    transition: background-color 1000ms ease-out;
+}
+
+body.light {
+    background-color: white;
+    -webkit-transition: background-color 1000ms ease-out;
+    -ms-transition: background-color 1000ms ease-out;
+    transition: background-color 1000ms ease-out;
+}
+
 @media only screen and (max-width: 701px){
   .card.z-depth-5.blueish {
     -webkit-box-shadow: 0 16px 24px 2px rgb(15 138 242 / 30%), 0 6px 30px 5px rgb(15 138 242 / 30%), 0 8px 10px -7px rgb(15 138 242 / 30%);
@@ -121,11 +168,23 @@ footer.page-footer {
   }
 
   .row .col.shops {
-    padding: 6%;
+    padding: 1%;
+  }
+
+  html {
+    font-size: 12px!important;
+  }
+
+  .dropdown-trigger .material-icons {
+    font-size: 12px;
+  }
+
+  .card .card-image .card-title.responsive {
+    padding: 1px;
   }
 
   .card .card-title.responsive {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 300;
   }
 }

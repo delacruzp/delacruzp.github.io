@@ -25,7 +25,7 @@
     <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbhfADt_Wf_EuLtfosor20CN0sie-9Puk&callback=initMap&libraries=&v=weekly" async></script>
 </head>
-<body ng-app="myApp" ng-controller="myCtrl">
+<body ng-app="myApp" ng-controller="myCtrl" class="hunt {{progress >= 100 ? 'dark' : 'light'}}">
   <header></header>
   <main>
       <nav class="blue-text">
