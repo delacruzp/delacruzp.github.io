@@ -11,16 +11,13 @@
     <meta name="description" content="Searching for Ice Scream in San Jose, CA">
     <link rel="icon" href="img/c3.png" sizes="32x32" type="image/png">
 
-
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
     <script async defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
     <link href="css/style.css" rel="stylesheet" type="text/css">
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>    
@@ -31,20 +28,6 @@
 <body ng-app="myApp" ng-controller="myCtrl">
   <header></header>
   <main>
-      <div class="container">
-          <div class="row">
-            <div class="blue-text welcome-text right">
-              <a ng-click="signin()" ng-if="!signedin" href="">Sign In</a>
-              <span ng-if="signedin">Hi, {{name}}!</span>
-            </div>
-            <div class="col s12 m10">
-              <h1 class="blue-text">The Hunt</h1>
-              <h5 class="blue-text">Licking every Ice Cream shop in San Jose!</h5>              
-            </div>            
-          </div>
-          
-          <div class="progress light-blue lighten-4">
-              <div class="determinate blue" style="width: {{progress}}%"></div>
       <nav class="blue-text">
         <div class="container">
           <div class="nav-wrapper">
@@ -54,27 +37,46 @@
               <li>Licking every Ice Cream shop in San Jose!</li>
             </ul>
           </div>
-          <div class="row">
-            <div class="col s6 m6 l4 xl3 shops" ng-repeat="shop in shops" >   
-              <div class="col-content blue blue-text">
-                <div class="card blueish {{visited.has(shop.id) ? 'z-depth-5 visited' : 'pending'}}">
-                <div class="card-image">
-                  <div class="img-wrapper" ng-click="toggle(shop)">
-                    <img src="{{shop.img || 'img/blue.jpg'}}">
-                    <span class="card-title responsive blue-text">{{shop.name}}</span>                    
-                  </div>
-                  <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'><i class="material-icons">more_vert</i></a>                  
-                  <ul id='dropdown1' class='dropdown-content'>
-                    <li><span><a href="https://www.google.com/maps/search/{{shop.name}}" target="_blank" rel="noopener noreferrer"><i class="material-icons right">directions</i>Directions</a></span></li>
-                    <li><span><a href="{{shop.website}}" target="_blank" rel="noopener noreferrer"><i class="material-icons right">open_in_new</i>Website</a></span></li>                      
-                  </ul>
-                </div>
         </div>
       </nav>
+      <div class="progress light-blue lighten-4">
+          <div class="determinate blue" style="width: {{progress}}%"></div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col s3 m2 l2 xl2 shops" ng-repeat="shop in shops" >   
+            <div class="col-content blue blue-text">
+              <div class="card blueish {{visited.has(shop.id) ? 'z-depth-3 visited' : 'pending'}}">
+              <div class="card-image">
+                <div class="img-wrapper" ng-click="toggle(shop)">
+                  <img src="{{shop.img || 'img/blue.jpg'}}">
+                  <span class="card-title responsive blue-text">{{shop.name}}</span>                    
                 </div>
+                <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'>
+                  <i class="material-icons">more_vert</i>
+                </a>                  
+                <ul id='dropdown1' class='dropdown-content'>
+                  <li>
+                    <span>
+                      <a href="https://www.google.com/maps/search/{{shop.name}}" target="_blank" rel="noopener noreferrer">
+                        <i class="material-icons right">directions</i>Directions
+                      </a>
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <a href="{{shop.website}}" target="_blank" rel="noopener noreferrer">
+                        <i class="material-icons right">open_in_new</i>Website
+                      </a>
+                    </span>
+                  </li>                      
+                </ul>
+              </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col s12 m10">
@@ -84,7 +86,7 @@
           </div>
         </div>
       </div>
-      <div id="map"></div>     
+      <div id="map"></div>
   </main>
   <script type="text/javascript">
     const shops = [
@@ -98,11 +100,8 @@
           },
           {
             "id": 3,
-            "name": "Yogurtland",
             "name": "CREAM",
             "map": "84M8+67 San Jose, California",
-            "website": "http://places.singleplatform.com/yogurtland-44/menu?ref=google",
-            "loc": [37.3532428,-121.9073822],
             "website": "https://creamnation.com/main-menu/?utm_source=google&utm_medium=organic&utm_campaign=gmb",
             "loc": [37.3642225,-121.8844526],
           },
@@ -138,10 +137,6 @@
           },
           {
             "id": 8,
-            "name": "Milk + Ice",
-            "map": "74R9+6Q San Jose, California",
-            "website": "https://www.ubereats.com/san-francisco/food-delivery/milk%2Bice/cpkVeXh9Rw-FZXoUm1xiwQ?utm_source=google&utm_medium=organic&utm_campaign=place-action-link",
-            "loc": [37.2908576,-121.8802459],
             "name": "La Michoacana Plus",
             "map": "85Q4+5Q San Jose, California",
             "website": "http://www.michoacanaplus.com/",
@@ -149,10 +144,6 @@
           },
           {
             "id": 9,
-            "name": "Golden State Ice Cream",
-            "map": "83CQ+XQ San Jose, California",
-            "website": "http://www.goldenstateicecream.com/",
-            "loc": [37.3442051,-121.9155194],
             "name": "Somisomi San Jose",
             "map": "9499+RW San Jose, California",
             "website": "http://somisomi.com/",
@@ -197,10 +188,6 @@
           },
           {
             "id": 15,
-            "name": "Treat Ice Cream Co",
-            "map": "84VH+Q2 San Jose, California",
-            "website": "http://places.singleplatform.com/treat-ice-cream-co/menu?ref=google",
-            "loc": [37.3532428,-121.9073822],
             "name": "Humphry Slocombe",
             "map": "93FR+R8 San Jose, California",
             "website": "http://places.singleplatform.com/humphry-slocombe-16/menu?ref=google",
@@ -243,16 +230,8 @@
             "map": "84M6+HW San Jose, California",
             "website": "http://www.noxcookiebar.com/",
             "loc": [37.335099,-121.8906737],
-            "img": "https://i.ibb.co/7KbsB46/IMG-1323.jpg"
             "img": "https://i.ibb.co/7KbsB46/IMG-1323.jpg",
           },
-          // {
-          //   "id": 20,
-          //   "name": "CLOSED Honey Creme",
-          //   "map": "C39M+MM Milpitas, California",
-          //   "website": "http://places.singleplatform.com/honey-creme/menu?ref=google",
-          //   "loc": [],
-          // },
           {
             "id": 21,
             "name": "Cauldron Ice Cream",
