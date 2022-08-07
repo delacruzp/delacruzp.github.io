@@ -50,7 +50,7 @@
               <div class="card-image">
                 <div class="img-wrapper" ng-click="toggle(shop)">
                   <img src="{{shop.img || 'img/blue.jpg'}}">
-                  <span class="card-title responsive blue-text">{{shop.name}}</span>                    
+                  <span ng-if="progress !== 100" class="card-title responsive blue-text">{{shop.name}}</span>                    
                 </div>
                 <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'>
                   <i class="material-icons">more_vert</i>
@@ -95,30 +95,30 @@
             "name": "Campbell Creamery",
             "map": "73P3+VW Campbell, California",
             "website": "https://www.campbellcreameryca.com/",
-            "loc": [37.3228762,-121.88733],
-            "img": "https://i.ibb.co/YWQB9WS/IMG-0786.jpg"
+            "loc": [37.2872559,-121.9495292],
+            "img": "/img/1.jpg"
           },
           {
             "id": 3,
             "name": "CREAM",
             "map": "84M8+67 San Jose, California",
             "website": "https://creamnation.com/main-menu/?utm_source=google&utm_medium=organic&utm_campaign=gmb",
-            "loc": [37.3642225,-121.8844526],
+            "loc": [37.3353148,-121.8923038],
           },
           {
             "id": 4,
-            "name": "Candy Kitchen",
+            "name": "San Jose Candy Kitchen",
             "map": "84M6+4V San Jose, California",
             "website": "https://www.ordersjcandykitchen.com/",
-            "loc": [37.3328125,-121.8900012],
+            "loc": [37.3330641,-121.8897586],
           },
           {
             "id": 5,
             "name": "Sweet Retreat",
             "map": "742R+2X San Jose, California",
             "website": "http://www.sweet-retreats.com/",
-            "loc": [37.250552,-121.8621579],
-            "img": "https://i.ibb.co/H4JH9GV/IMG-0748.jpg",
+            "loc": [37.2500229,-121.8597632],
+            "img": "/img/5.jpg",
           },
           {
             "id": 6,
@@ -126,120 +126,121 @@
             "map": "84M6+JV San Jose, California",
             "website": "http://www.mymilkshakesj.com/",
             "loc": [37.3341772,-121.8855712],
-            "img": "https://i.ibb.co/nRhkbpc/PXL-20201017-215229402.jpg"
+            "img": "/img/6.jpg"
           },
           {
             "id": 7,
             "name": "La Original Paleteria y Neveria",
             "map": "8498+8G San Jose, California",
             "website": "http://www.laoriginalpaleteria.net/",
-            "loc": [37.3442051,-121.9155194],
+            "loc": [37.3183042,-121.8881819],
           },
           {
             "id": 8,
             "name": "La Michoacana Plus",
             "map": "85Q4+5Q San Jose, California",
             "website": "http://www.michoacanaplus.com/",
-            "loc": [37.3379077,-121.9131139],
+            "loc": [37.318953,-121.8847321],
           },
           {
             "id": 9,
-            "name": "Somisomi San Jose",
+            "name": "SomiSomi",
             "map": "9499+RW San Jose, California",
             "website": "http://somisomi.com/",
-            "loc": [37.355294,-121.928131],
+            "loc": [37.3640888,-121.8950815],
+            "img": "/img/9.jpg"
           },
           {
             "id": 10,
             "name": "Sweet Rendezvous",
             "map": "65X3+PM San Jose, California",
             "website": "http://sweetrendezvous.net/",
-            "loc": [37.2490675,-121.8459048],
-            "img": "https://i.ibb.co/bXnPWzr/PXL-20210308-011139316.jpg"
+            "loc": [37.2492961,-121.8479703],
+            "img": "/img/10.jpg"
           },
           {
             "id": 11,
-            "name": "Frozen Ninja",
+            "name": "Frozen Ninja^",
             "map": "94WG+V9 San Jose, California",
             "website": "https://www.doordash.com/store/frozen-ninja-san-jose-786733/en-US/?utm_campaign=gpa",
-            "loc": [37.3971798,-121.8743285],
-            "img": "https://i.ibb.co/PjTC3h8/IMG-0239.jpg"
+            "loc": [37.3971983,-121.8762152],
+            "img": "/img/11.jpg"
           },
           {
             "id": 12,
             "name": "Willow Glen Creamery",
             "map": "835X+8P San Jose, California",
             "website": "https://www.willowglencreameryca.com/",
-            "loc": [37.325626,-121.9152149],
-            "img": "https://i.ibb.co/rt863WY/IMG-1163.jpg",
+            "loc": [37.3083185,-121.9052323],
+            "img": "/img/12.jpg",
           },
           {
             "id": 13,
             "name": "Sweet Fix Creamery",
             "map": "95C5+G4 San Jose, California",
             "website": "https://www.sweetfixcreamery.com/",
-            "loc": [37.3886279,-121.9067932],
+            "loc": [37.3713868,-121.8443388],
           },
           {
             "id": 14,
             "name": "Marco Polo Italian",
             "map": "84JV+M8 San Jose, California",
             "website": "https://www.vietnamtownonline.com/directory-store/marco-polo-italian-ice-cream",
-            "loc": [37.3532428,-121.9073822],
+            "loc": [37.3317478,-121.8588313],
           },
           {
             "id": 15,
             "name": "Humphry Slocombe",
             "map": "93FR+R8 San Jose, California",
             "website": "http://places.singleplatform.com/humphry-slocombe-16/menu?ref=google",
-            "loc": [37.355294,-121.928131],
+            "loc": [37.3745809,-121.9113639],
           },
           {
             "id": 16,
-            "name": "Celsius",
+            "name": "Celsius^",
             "map": "C49G+3C Milpitas, California",
             "website": "http://www.celsiusicecream.com/",
-            "loc": [37.3235906,-121.9643474]
+            "loc": [37.4177257,-121.8761863]
           },
           {
             "id": 17,
             "name": "Smitten",
             "map": "83C2+78 San Jose, California",
             "website": "https://www.smittenicecream.com/locations/santana-row/",
-            "loc": [37.325626,-121.9152149],
-            "img": "https://i.ibb.co/VtVLHNs/IMG-0950.jpg",
+            "loc": [37.3207229,-121.9513214],
+            "img": "/img/17.jpg",
           },
           {
             "id": 18,
             "name": "Rocko's Tacos",
             "map": "83W6+6X Santa Clara, California",
             "website": "http://www.rockosicecreamtacos.com/",
-            "loc": [37.3749759,-121.9915844],
-            "img": "https://i.ibb.co/kKgTJRX/PXL-20210315-003744630-PORTRAIT-1.jpg"
+            "loc": [37.3420622,-121.9352177],
+            "img": "/img/18.jpg"
           },
           {
             "id": 19,
-            "name": "Real",
+            "name": "Real Ice Cream",
             "map": "924C+C8 Santa Clara, California",
             "website": "http://realicecream.net/",
-            "loc": [37.3446995,-121.9614064],
-            "img": "https://i.ibb.co/4KMqq2F/IMG-0699.jpg",
+            "loc": [37.3596487,-122.0008413],
+            "img": "/img/19.jpg",
           },
           {
             "id": 2,
             "name": "Nox Cookie Bar",
             "map": "84M6+HW San Jose, California",
             "website": "http://www.noxcookiebar.com/",
-            "loc": [37.335099,-121.8906737],
-            "img": "https://i.ibb.co/7KbsB46/IMG-1323.jpg",
+            "loc": [37.3339837,-121.8922063],
+            "img": "/img/2.jpg",
           },
           {
             "id": 21,
             "name": "Cauldron",
             "map": "94J3+RJ San Jose, California",
             "website": "http://cauldronicecream.com/",
-            "loc": [37.3820667,-121.8981262],
-            "img": "https://i.ibb.co/BgtY7qJ/IMG-1123.jpg",
+            "loc": [37.3818975,-121.8982019],
+            "img": "/img/21.jpg",
           },
 
       ];
@@ -304,7 +305,7 @@
       
       $scope.shops = shops;
       $scope.visited = new Set();
-      updateProgress();      
+      updateProgress();
 
       $scope.toggle = function(shop) {
         if ($scope.visited.has(shop.id)) {
@@ -376,6 +377,7 @@
         if (!db) {
           console.err("sync - no db")
           updateMarkers();
+          updateProgress();
           return;
         }
         db.$loaded()
@@ -430,6 +432,7 @@
       const auth = $firebaseAuth();
       $scope.signedin = false;
       auth.$onAuthStateChanged(function(firebaseUser) {
+        console.log("onAuthStateChanged", firebaseUser);
         if (firebaseUser) {
           $scope.signedin = true;
           $scope.name = firebaseUser.displayName.split(' ')[0];
@@ -443,6 +446,7 @@
           const visitedArray = JSON.parse(window.localStorage.getItem('visited'));
           $scope.visited = new Set(visitedArray);
           updateMarkers();
+          updateProgress();
         }        
       });
     });
