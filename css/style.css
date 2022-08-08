@@ -5,6 +5,7 @@ body {
     flex-direction: column;
     /*background: #2e7bcf;*/
     transition:all 1s ease;
+    /* background-color: #0f8af2!important; */
 }
 
 main {
@@ -39,8 +40,14 @@ footer.page-footer {
 
 .top-right {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 3px;
+    right: 0px;
+}
+
+.top-left {
+  position: absolute;
+  top: 3px;
+  /* right: 0px; */
 }
 
 .fixed-action-btn.top-right {
@@ -87,6 +94,58 @@ footer.page-footer {
     object-fit: cover;
 }
 
+
+.my-shopy.visited > div {
+  background-size: 100%;
+  background-image: url(http://imgur.com/jMQ5vHg);
+  -webkit-filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.75));
+  -moz-filter: drop-shadow(1px 1px 2px rgba(179, 174, 174, 0.75));
+  -ms-filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.75));
+  -o-filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.75));
+}
+
+.my-shopy .mask {
+  mask-image: url(/img/mail4.svg);
+  -webkit-mask-image: url(/img/mail4.svg);
+  mask-size: contain;
+  -webkit-mask-size: 180%;
+  mask-position: center;
+  -webkit-mask-position: center;
+}
+
+.my-shopy img {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.5s ease-in;
+  -webkit-transition: opacity 0.5s ease-in;
+  object-fit: cover;
+  
+}
+
+.my-shopy > div {
+  display: block;
+  position: relative;
+}
+
+.my-shopy.pending img {
+  transition: opacity 0.5s ease-in;
+  -webkit-transition: opacity 0.5s ease-in;
+  opacity: 0.2;
+}
+
+.my-shopy span.title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1.5em; 
+  text-shadow: 1px 1px 3px #cbd6df;
+}
+
+.my-shopy.visited span.title {
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+  width: 100%;
+}
+
 .card.pending img {
     transition: opacity 0.5s;
     -webkit-transition: opacity 0.5s;
@@ -97,6 +156,22 @@ footer.page-footer {
     color: white!important;
     /*text-shadow: 1px 1px 5px #2196f3;*/
 }
+
+.card .card-image .card-title.responsive {
+  padding: 1px;
+  padding-top: 8px;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.card.visited .card-image .card-title.responsive {
+  background-image: linear-gradient(rgba(255,0,0,0), rgb(9 109 193 / 79%));
+  /* background-image: linear-gradient(rgba(255,0,0,0), rgb(15 138 242 / 79%)); */
+  width: 100%;
+}
+
 
 /* Set the size of the div element that contains the map */
 #map {
@@ -161,6 +236,34 @@ body.light {
     transition: background-color 1000ms ease-out;
 }
 
+/* Stamp :) */
+
+div.pending span.stamp.top-left { 
+    opacity: 0;
+}
+
+div.visited span.stamp.top-left {
+    opacity: 1;
+    transition: opacity 1s 1s ease-in;
+    /* transform: rotate(14deg); */
+    color: rgb(24, 1, 126);
+    font-size: 14px;
+    font-weight: 700;
+    /* border: 0.2rem solid #555; */
+    display: inline-block;
+    padding: 0.001rem 0.1rem;
+    text-transform: uppercase;
+    border-radius: 0.5rem;
+    font-family: 'Courier';
+    -webkit-mask-image: url(/img/grunge.png);
+    -webkit-mask-size: 944px 604px;
+    mix-blend-mode: multiply;
+    /* border: 0.5rem double #D23; */
+        -webkit-mask-position: 2rem 3rem;
+    /* top: 30px; */
+    left: 0px;
+}
+
 @media only screen and (max-width: 701px){
   .card.z-depth-5.blueish {
     -webkit-box-shadow: 0 16px 24px 2px rgb(15 138 242 / 30%), 0 6px 30px 5px rgb(15 138 242 / 30%), 0 8px 10px -7px rgb(15 138 242 / 30%);
@@ -172,11 +275,11 @@ body.light {
   }
 
   html {
-    font-size: 12px!important;
+    font-size: 10px;
   }
 
   .dropdown-trigger .material-icons {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .card .card-image .card-title.responsive {
@@ -184,7 +287,15 @@ body.light {
   }
 
   .card .card-title.responsive {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 300;
+  }
+
+  div.visited span.stamp.top-left {
+    font-size: 7px;
+    /* transform: rotate(30deg); */
+    /* top: 18px; */
+    /* right: 2px; */
+    opacity: 0.6;
   }
 }

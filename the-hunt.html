@@ -44,42 +44,22 @@
       </div>
       <div class="container">
         <div class="row">
-          <div class="col s3 m2 l2 xl2 shops" ng-repeat="shop in shops" >   
-            <div class="col-content blue blue-text">
-              <div class="card blueish {{visited.has(shop.id) ? 'z-depth-3 visited' : 'pending'}}">
-              <div class="card-image">
-                <div class="img-wrapper" ng-click="toggle(shop)">
-                  <img src="{{shop.img || 'img/blue.jpg'}}">
-                  <span ng-if="progress !== 100" class="card-title responsive blue-text">{{shop.name}}</span>                    
-                </div>
-                <a class="dropdown-trigger top-right {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}" href='#' data-target='dropdown1'>
-                  <i class="material-icons">more_vert</i>
-                </a>                  
-                <ul id='dropdown1' class='dropdown-content'>
-                  <li>
-                    <span>
-                      <a href="https://www.google.com/maps/search/{{shop.name}}" target="_blank" rel="noopener noreferrer">
-                        <i class="material-icons right">directions</i>Directions
-                      </a>
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      <a href="{{shop.website}}" target="_blank" rel="noopener noreferrer">
-                        <i class="material-icons right">open_in_new</i>Website
-                      </a>
-                    </span>
-                  </li>                      
-                </ul>
-              </div>
+          <div class="my-shopy col s3 xl2 shops {{visited.has(shop.id) ? 'visited' : 'pending'}}"
+            ng-class="{'offset-xl1': $index % 5 == 0}"
+             ng-repeat="shop in shops" ng-click="toggle(shop)">   
+            <div>
+              <div class="mask">
+                <!-- TODO: Add Directions -->
+                <img src="{{shop.img || 'img/placeholder.jpg'}}">
+                <span ng-if="progress !== 100" class="title responsive {{visited.has(shop.id) ? 'white-text' : 'blue-text'}}">{{shop.name}}</span>                    
               </div>
             </div>
           </div>
-        </div>
+        </div> 
       </div>
 
       <div class="row">
-        <div class="col s12 m10">
+        <div class="col s12">
           <div class="blue-text center-align">
             <a ng-click="signin()" ng-if="!signedin" href="">Sign In</a>
             <span ng-if="signedin">Hi, {{name}}!</span>
