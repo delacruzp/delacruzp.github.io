@@ -236,6 +236,31 @@
             left: 0;
             opacity: 0.5;
         }
+
+        /* Iframe loading spinner */
+        .spinner-overlay {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            border-radius: 12px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255,255,255,0.15);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -418,36 +443,47 @@ Favorite Paragraphs:
             ],
             essays: [
                 {
-                    id: 'e1', title: "Digital Culture",
-                    year: "Essays",
-                    rating: 4, url: "https://www.nytimes.com/",
-                    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
-                    review: "A provocative look at how modern technology is reshaping our attention spans."
+                    id: 'e1',
+                    title: "The Goon Squad",
+                    year: "Nov, 2025",
+                    author: "Daniel Kolitz",
+                    // rating: 4, 
+                    url: "https://harpers.org/archive/2025/11/the-goon-squad-daniel-kolitz-porn-masturbation-loneliness/",
+                    image: "/img/2025-e1.webp",
+                    site: "Harpers",
+                    review: "Loneliness, porn’s next frontier, and the dream of endless masturbation."
                 },
                 {
-                    id: 'e2', title: "The Urban Pulse",
-                    year: "Essays",
-                    rating: 5, url: "https://www.nytimes.com/",
-                    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=1000",
-                    review: "Brilliant analysis of how cities are evolving post-pandemic."
-                }
-            ],
-            songs: [
-                {
-                    id: 's1', title: "Hologram Heart",
-                    year: "Music",
-                    rating: 5, url: "https://open.spotify.com/",
-                    image: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1000",
-                    review: "The pop anthem of the summer. Catchy, nostalgic, yet completely futuristic."
+                    id: 'e2',
+                    title: "We’ve Reached Peak Gay Sluttiness",
+                    year: "Aug 29, 2025",
+                    author: "Steven Phillips-Horst",
+                    url: "https://www.thecut.com/article/ghb-doxypep-sniffies-peak-gay-sluttiness-era-nyc.html",
+                    image: "/img/2025-e2.webp",
+                    site: "The Cut",
+                    review: "Party all weekend, hook up with anyone, never get an STD — or even a hangover. Who says nobody’s having sex anymore?"
                 },
                 {
-                    id: 's2', title: "Midnight Echo",
-                    year: "Music",
-                    rating: 4, url: "https://open.spotify.com/",
-                    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=1000",
-                    review: "Atmospheric synth-wave that feels like driving through a city at 3 AM."
+                    id: 'e3',
+                    title: "She Wanted to Save the World From A.I. Then the Killings Started.",
+                    year: "Jul 6, 2025",
+                    author: "Christopher Beam",
+                    url: "https://www.nytimes.com/2025/07/06/business/ziz-lasota-zizians-rationalists.html?smid=nytcore-android-share",
+                    image: "/img/2025-e3.webp",
+                    site: "NY Times",
+                    review: "At first, Ziz LaSota seemed much like any other philosophically inclined young tech aspirant. Now, she and her followers are in jail, six people are dead, and Rationalists are examining whether their ideas played a role."
+                },
+                {
+                    id: 'e4',
+                    title: "We Bought a 450-Pound Mystery Pallet Packed With Returned Goods From Amazon and Beyond. Here’s What We Found Inside.",
+                    year: "Nov 17, 2025",
+                    author: "Annemarie Conte",
+                    url: "https://www.nytimes.com/wirecutter/reviews/mystery-amazon-pallet-unboxing/",
+                    image: "/img/2025-e4.webp",
+                    site: "Wirecutter",
                 }
             ],
+            songs: [],
             podcasts: [
                 {
                     id: 'p1', title: "The Daily",
@@ -473,6 +509,7 @@ Favorite Paragraphs:
             const [activeCategory, setActiveCategory] = useState(null);
             const [exitingCategory, setExitingCategory] = useState(null);
             const [selectedId, setSelectedId] = useState(null);
+            const [iframeLoaded, setIframeLoaded] = useState(false);
             const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right' for incoming
 
             const allItems = useMemo(() => {
@@ -514,6 +551,8 @@ Favorite Paragraphs:
                     setExitingCategory(activeCategory);
                     setTimeout(() => setExitingCategory(null), 800);
                 }
+                // reset iframe loading state whenever switching categories
+                setIframeLoaded(false);
                 setActiveCategory(catId);
                 setView('gallery');
                 setSelectedId(null);
@@ -525,6 +564,7 @@ Favorite Paragraphs:
                 setSlideDirection('left');
                 setActiveCategory(null);
                 setSelectedId(null);
+                setIframeLoaded(false);
                 setView('landing');
                 setTimeout(() => setExitingCategory(null), 800);
             }, [view, activeCategory]);
@@ -588,7 +628,29 @@ Favorite Paragraphs:
                         key={catId + (isExiting ? '-exit' : '-entry')}
                         className={`${isExiting ? 'absolute top-0 left-0 w-full' : 'relative'} ${animationClass}`}
                     >
-                        <div className="item-grid border border-white/10 rounded-lg overflow-hidden">
+                        <div className={`${catId === 'songs' ? 'block' : 'item-grid'} border border-white/10 rounded-lg overflow-hidden`}>
+                            {
+                                (catId === 'songs') && (
+                                    <>
+                                        {!iframeLoaded && (
+                                            <div className="spinner-overlay" data-testid="iframe-spinner">
+                                                <div className="spinner" />
+                                            </div>
+                                        )}
+                                        <iframe
+                                            data-testid="embed-iframe"
+                                            style={{borderRadius: '12px', display: iframeLoaded ? 'block' : 'none'}}
+                                            src="https://open.spotify.com/embed/playlist/2QorRWqR3d67omG6dGA6im?utm_source=generator&theme=0"
+                                            width="100%"
+                                            height="600"
+                                            frameBorder="0"
+                                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                            loading="eager"
+                                            onLoad={() => setIframeLoaded(true)}
+                                        ></iframe>
+                                    </>
+                                )
+                            }
                             {INITIAL_DATA[catId].map((item) => (
                                 <div key={item.id} className="grid-item cursor-pointer group" onClick={() => !isExiting && setSelectedId(item.id)}>
                                     <img src={item.image} alt={item.title} />
@@ -715,7 +777,7 @@ Favorite Paragraphs:
                                         </div>
                                     )}
                                     <a href={selectedItem.url} target="_blank" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all pb-1 border-b border-white/5 hover:border-white/40 mb-12">
-                                        Source: {CATEGORIES.find(c => c.id === selectedItem.categoryId)?.brand}
+                                        {selectedItem.site ? selectedItem.site : CATEGORIES.find(c => c.id === selectedItem.categoryId)?.brand}
                                     </a>
                                 </div>
                             </div>
