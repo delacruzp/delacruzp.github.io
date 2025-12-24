@@ -792,7 +792,7 @@ Favorite Paragraphs:
                     )}
 
                     {view === 'gallery' && !selectedId && (
-                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12 overflow-y-auto no-scrollbar h-screen">
+                        <main className="min-h-screen p-20 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12 overflow-y-auto no-scrollbar h-screen">
                             <div className="gallery-container">
                                 {exitingCategory && renderGrid(exitingCategory, slideDirection === 'left' ? 'exit-to-right' : 'exit-to-left', true)}
                                 {activeCategory && renderGrid(activeCategory, slideDirection === 'left' ? 'slide-from-left' : 'slide-from-right', false)}
