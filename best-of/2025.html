@@ -726,9 +726,13 @@ Favorite Paragraphs:
 
                     {/* Content Views */}
                     {view === 'landing' && (
-                        <div className="fixed inset-0 flex flex-col items-center justify-center p-8 z-10 cursor-pointer" onClick={() => handleCategoryClick(CATEGORIES[0].id)}>
-                            <h1 className="text-8xl md:text-[14rem] font-serif leading-none tracking-tighter mb-4 opacity-80">2025</h1>
-                            <p className="text-xs md:text-sm font-light opacity-40 tracking-[0.5em] uppercase text-center">Swipe left or click to enter</p>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 fade-in">
+                            <div className="text-center mb-24 max-w-2xl">
+                                <h1 className="text-8xl md:text-[12rem] font-serif leading-none tracking-tighter mb-8">2025</h1>
+                                <p className="text-base md:text-xl font-light opacity-60 tracking-wide leading-relaxed px-4">
+                                    An entirely unbiased anthology of the year's most impactful media. You are welcome.
+                                </p>
+                            </div>
                         </div>
                     )}
 
