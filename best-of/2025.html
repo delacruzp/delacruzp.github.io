@@ -71,7 +71,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.0);
         }
 
         @media (min-width: 768px) {
@@ -262,6 +262,14 @@
             to {
                 transform: rotate(360deg);
             }
+        }
+
+        .title-clamp {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -505,25 +513,74 @@ Favorite Paragraphs:
             podcasts: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v1a7 7 0 0 1-14 0v-1" /></svg>
         };
 
-        const App = () => {
-            const [view, setView] = useState('landing');
-            const [activeCategory, setActiveCategory] = useState(null);
-            const [exitingCategory, setExitingCategory] = useState(null);
-            const [selectedId, setSelectedId] = useState(null);
-            const [iframeLoaded, setIframeLoaded] = useState(false);
-            const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right' for incoming
+        const allItemsList = CATEGORIES.flatMap(cat =>
+            (INITIAL_DATA[cat.id] || []).map(item => ({ ...item, categoryId: cat.id }))
+        );
 
-            const allItems = useMemo(() => {
-                return CATEGORIES.flatMap(cat =>
-                    INITIAL_DATA[cat.id].map(item => ({ ...item, categoryId: cat.id }))
-                );
+        const App = () => {
+            const getParsedHash = useCallback(() => {
+                const hash = window.location.hash.replace(/^#\/?/, '');
+                if (!hash) return { view: 'landing', activeCategory: null, selectedId: null };
+                const parts = hash.split('/');
+                const catId = parts[0];
+                const itemId = parts[1];
+
+                const category = CATEGORIES.find(c => c.id === catId);
+                if (category) {
+                    const item = allItemsList.find(i => i.id === itemId);
+                    return {
+                        view: 'gallery',
+                        activeCategory: category.id,
+                        selectedId: item ? item.id : null
+                    };
+                }
+                return { view: 'landing', activeCategory: null, selectedId: null };
             }, []);
+
+            const initial = getParsedHash();
+
+            const [view, setView] = useState(initial.view);
+            const [activeCategory, setActiveCategory] = useState(initial.activeCategory);
+            const [exitingCategory, setExitingCategory] = useState(null);
+            const [selectedId, setSelectedId] = useState(initial.selectedId);
+            const [iframeLoaded, setIframeLoaded] = useState(false);
+            const [slideDirection, setSlideDirection] = useState('right');
+
+            const allItems = useMemo(() => allItemsList, []);
 
             const currentIndex = useMemo(() =>
                 allItems.findIndex(item => item.id === selectedId),
                 [selectedId, allItems]);
 
             const selectedItem = allItems[currentIndex] || null;
+
+            // Sync state to hash
+            useEffect(() => {
+                let newHash = '/';
+                if (view === 'landing') {
+                    newHash = '/';
+                } else if (activeCategory) {
+                    newHash += activeCategory;
+                    if (selectedId) {
+                        newHash += '/' + selectedId;
+                    }
+                }
+                if (window.location.hash !== '#' + newHash) {
+                    window.location.hash = newHash;
+                }
+            }, [view, activeCategory, selectedId]);
+
+            // Sync hash to state (back button)
+            useEffect(() => {
+                const handleHashChange = () => {
+                    const parsed = getParsedHash();
+                    if (parsed.view !== view) setView(parsed.view);
+                    if (parsed.activeCategory !== activeCategory) setActiveCategory(parsed.activeCategory);
+                    if (parsed.selectedId !== selectedId) setSelectedId(parsed.selectedId);
+                };
+                window.addEventListener('hashchange', handleHashChange);
+                return () => window.removeEventListener('hashchange', handleHashChange);
+            }, [getParsedHash, view, activeCategory, selectedId]);
 
             const navigateTo = useCallback((index) => {
                 if (index >= 0 && index < allItems.length) {
@@ -543,7 +600,6 @@ Favorite Paragraphs:
             const handleCategoryClick = useCallback((catId) => {
                 if (catId === activeCategory) return;
                 if (view === 'landing') {
-                    // Coming from home: Slide from the RIGHT as requested
                     setSlideDirection('right');
                 } else if (activeCategory) {
                     const currentIdx = CATEGORIES.findIndex(c => c.id === activeCategory);
@@ -552,7 +608,6 @@ Favorite Paragraphs:
                     setExitingCategory(activeCategory);
                     setTimeout(() => setExitingCategory(null), 800);
                 }
-                // reset iframe loading state whenever switching categories
                 setIframeLoaded(false);
                 setActiveCategory(catId);
                 setView('gallery');
@@ -629,7 +684,7 @@ Favorite Paragraphs:
                         key={catId + (isExiting ? '-exit' : '-entry')}
                         className={`${isExiting ? 'absolute top-0 left-0 w-full' : 'relative'} ${animationClass}`}
                     >
-                        <div className={`${catId === 'songs' ? 'block' : 'item-grid'} border border-white/10 rounded-lg overflow-hidden`}>
+                        <div className={`${catId === 'songs' ? 'block' : 'item-grid'} rounded-lg overflow-hidden`}>
                             {
                                 (catId === 'songs') && (
                                     <>
@@ -656,7 +711,7 @@ Favorite Paragraphs:
                                 <div key={item.id} className="grid-item cursor-pointer group" onClick={() => !isExiting && setSelectedId(item.id)}>
                                     <img src={item.image} alt={item.title} />
                                     <div className="grid-item-info">
-                                        <h4 className="text-sm md:text-xl font-serif">{item.title}</h4>
+                                        <h4 className="text-sm md:text-xl font-serif title-clamp">{item.title}</h4>
                                         <div className="flex gap-1 mt-2">
                                             {[...Array(5)].map((_, i) => (
                                                 <div key={i} className={`h-[1px] w-3 ${i < item.rating ? 'bg-white' : 'bg-white/10'}`} />
@@ -720,7 +775,7 @@ Favorite Paragraphs:
                             <h1 className="text-[10px] md:text-sm font-medium tracking-[0.4em] uppercase opacity-40">Archive 2025</h1>
                         </div>
                         <h2 className="text-xl md:text-5xl font-serif italic tracking-tight">
-                            {selectedId ? CATEGORIES.find(c => c.id === selectedItem?.categoryId)?.titleLabel : (activeCategory ? CATEGORIES.find(c => c.id === activeCategory).titleLabel : 'Best Of')}
+                            {selectedId ? CATEGORIES.find(c => c.id === selectedItem?.categoryId)?.titleLabel : (activeCategory ? CATEGORIES.find(c => c.id === activeCategory).titleLabel : '')}
                         </h2>
                     </header>
 
@@ -728,7 +783,7 @@ Favorite Paragraphs:
                     {view === 'landing' && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center p-8 fade-in">
                             <div className="text-center mb-24 max-w-2xl">
-                                <h1 className="text-8xl md:text-[12rem] font-serif leading-none tracking-tighter mb-8">2025</h1>
+                                <h1 className="text-8xl md:text-[12rem] font-serif leading-none tracking-tighter mb-8">Best of 2025</h1>
                                 <p className="text-base md:text-xl font-light opacity-60 tracking-wide leading-relaxed px-4">
                                     An entirely unbiased anthology of the year's most impactful media. You are welcome.
                                 </p>
