@@ -135,20 +135,77 @@
             scrollbar-width: none;
         }
 
-        .slide-up-enter {
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* Entry & Exit Animations */
+        .slide-from-left {
+            animation: slideFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes slideUp {
+        .slide-from-right {
+            animation: slideFromRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Exits swipe in the opposite direction */
+        .exit-to-right {
+            animation: exitToRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .exit-to-left {
+            animation: exitToLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideFromLeft {
             from {
-                transform: translateY(100vh);
+                transform: translateX(-100vw);
                 opacity: 0;
             }
 
             to {
-                transform: translateY(0);
+                transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        @keyframes slideFromRight {
+            from {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes exitToRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        @keyframes exitToLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(-100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Container to keep exiting and entering grids positioned correctly */
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            overflow: visible;
         }
     </style>
 </head>
@@ -202,7 +259,9 @@
         const App = () => {
             const [view, setView] = useState('landing');
             const [activeCategory, setActiveCategory] = useState(null);
+            const [exitingCategory, setExitingCategory] = useState(null);
             const [selectedId, setSelectedId] = useState(null);
+            const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right' for incoming
 
             const allItems = useMemo(() => {
                 return CATEGORIES.flatMap(cat =>
@@ -232,10 +291,29 @@
             }, [currentIndex, navigateTo]);
 
             const handleCategoryClick = useCallback((catId) => {
+                if (catId === activeCategory) return;
+
+                if (view === 'landing') {
+                    // Coming from home: Slide from the RIGHT as requested
+                    setSlideDirection('right');
+                } else if (activeCategory) {
+                    const currentIdx = CATEGORIES.findIndex(c => c.id === activeCategory);
+                    const newIdx = CATEGORIES.findIndex(c => c.id === catId);
+
+                    // Incoming direction based on category list order
+                    const direction = newIdx < currentIdx ? 'left' : 'right';
+                    setSlideDirection(direction);
+
+                    // Set current as exiting
+                    setExitingCategory(activeCategory);
+                    // Clear exiting state after animation duration
+                    setTimeout(() => setExitingCategory(null), 800);
+                }
+
                 setActiveCategory(catId);
                 setView('gallery');
                 setSelectedId(null);
-            }, []);
+            }, [view, activeCategory]);
 
             // Navigation Helpers for Category Swiping
             const cycleCategory = useCallback((direction) => {
@@ -298,6 +376,33 @@
                 return 'Best Of';
             }, [selectedId, activeCategory, selectedItem]);
 
+            // Helper to render a specific grid category
+            const renderGrid = (catId, animationClass, isExiting = false) => {
+                if (!catId) return null;
+                return (
+                    <div
+                        key={catId + (isExiting ? '-exit' : '-entry')}
+                        className={`${isExiting ? 'absolute top-0 left-0 w-full' : 'relative'} ${animationClass}`}
+                    >
+                        <div className="item-grid border border-white/10 rounded-lg overflow-hidden">
+                            {INITIAL_DATA[catId].map((item) => (
+                                <div key={item.id} className="grid-item cursor-pointer group" onClick={() => !isExiting && setSelectedId(item.id)}>
+                                    <img src={item.image} alt={item.title} />
+                                    <div className="grid-item-info">
+                                        <h4 className="text-sm md:text-xl font-serif">{item.title}</h4>
+                                        <div className="flex gap-1 mt-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <div key={i} className={`h-[1px] w-3 ${i < item.rating ? 'bg-white' : 'bg-white/10'}`} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
             return (
                 <div
                     className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}
@@ -330,21 +435,18 @@
                     )}
 
                     {view === 'gallery' && !selectedId && (
-                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12 slide-up-enter">
-                            <div className="item-grid border border-white/10 rounded-lg overflow-hidden">
-                                {INITIAL_DATA[activeCategory].map((item) => (
-                                    <div key={item.id} className="grid-item cursor-pointer group" onClick={() => setSelectedId(item.id)}>
-                                        <img src={item.image} alt={item.title} />
-                                        <div className="grid-item-info">
-                                            <h4 className="text-sm md:text-xl font-serif">{item.title}</h4>
-                                            <div className="flex gap-1 mt-2">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <div key={i} className={`h-[1px] w-3 ${i < item.rating ? 'bg-white' : 'bg-white/10'}`} />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12">
+                            <div className="gallery-container">
+                                {exitingCategory && renderGrid(
+                                    exitingCategory,
+                                    slideDirection === 'left' ? 'exit-to-right' : 'exit-to-left',
+                                    true
+                                )}
+                                {activeCategory && renderGrid(
+                                    activeCategory,
+                                    slideDirection === 'left' ? 'slide-from-left' : 'slide-from-right',
+                                    false
+                                )}
                             </div>
                         </main>
                     )}
