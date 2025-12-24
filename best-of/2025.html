@@ -245,21 +245,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.45);
+            background: rgba(0, 0, 0, 0.45);
             border-radius: 12px;
         }
 
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid rgba(255,255,255,0.15);
+            border: 4px solid rgba(255, 255, 255, 0.15);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -275,7 +277,6 @@
             { id: 'books', label: 'Literature', titleLabel: 'Best Books', brand: 'Goodreads' },
             { id: 'essays', label: 'Essays', titleLabel: 'Best Essays', brand: 'NY Times' },
             { id: 'songs', label: 'Music', titleLabel: 'Best Songs', brand: 'Spotify' },
-            { id: 'podcasts', label: 'Podcasts', titleLabel: 'Best Podcasts', brand: 'Spotify' }
         ];
 
         const INITIAL_DATA = {
@@ -639,7 +640,7 @@ Favorite Paragraphs:
                                         )}
                                         <iframe
                                             data-testid="embed-iframe"
-                                            style={{borderRadius: '12px', display: iframeLoaded ? 'block' : 'none'}}
+                                            style={{ borderRadius: '12px', display: iframeLoaded ? 'block' : 'none' }}
                                             src="https://open.spotify.com/embed/playlist/2QorRWqR3d67omG6dGA6im?utm_source=generator&theme=0"
                                             width="100%"
                                             height="600"
