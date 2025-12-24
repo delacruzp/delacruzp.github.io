@@ -207,6 +207,31 @@
             width: 100%;
             overflow: visible;
         }
+
+        /* Review Formatting */
+        .review-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .review-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .review-content li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            text-align: left;
+        }
+
+        .review-content li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            opacity: 0.5;
+        }
     </style>
 </head>
 
@@ -227,67 +252,206 @@
         const INITIAL_DATA = {
             movies: [
                 {
-                    id: 'm1', title: "A Nice Indian Boy", year: "Cinema", rating: 5, url: "https://letterboxd.com/delacruzp/film/a-nice-indian-boy/", image: "https://image.tmdb.org/t/p/original/xfY2FZlnm5uaQbaWR9IYW41J1xG.jpg", review: `I was laughing out loud through out this entire movie. The only moments when I was not laughing it was, because I was aggressively sobbing.\n
-\nI must admit I was apprehensive going into this movie. But everything about it was SO f-ing good. Every single joke landed, my entire movie theater was enjoying the movie, which made the whole experience that more enjoyable.
-\n\n
+                    id: 'm1',
+                    title: "A Nice Indian Boy",
+                    year: "Cinema",
+                    rating: 5,
+                    url: "https://letterboxd.com/delacruzp/film/a-nice-indian-boy/",
+                    image: "https://image.tmdb.org/t/p/original/xfY2FZlnm5uaQbaWR9IYW41J1xG.jpg",
+                    review: `I was laughing out loud through out this entire movie. The only moments when I was not laughing it was, because I was aggressively sobbing.
+
+I must admit I was apprehensive going into this movie. But everything about it was SO f-ing good. Every single joke landed, my entire movie theater was enjoying the movie, which made the whole experience that more enjoyable.
+
 I think it's my first time watching a movie, where the relationship with the parents it's not a zero sum game. It's not all in, neither all out. It's hard, complicated, awkward and at time sad, and still they keep trying to make it work.
 
 I loved the splitting the movie into chapters. Love the way it tell the stories. Both the cutaways from the date, to the discussion of the date, and back. The sister narration. Ugh I love this movie.
 
 Scenes where I cried:
-- Naveen saying that of course he wants a wedding and love, and all the nice things.
-- The mom saying that she was scared to say the wrong thing, and lose her kid forever.
-- The dad saying that his kid has good taste.
-
-Favorite Quotes:
-- Are you waiting for a big speech to make you stay? Cuz I wont have one.
-- I know, I'm the dramatic one.
-- "I don't want to hear sweeping notions of love. It's 2024, the world is burning!"
-- "We think it's wonderful that you're White."` },
+• Naveen saying that of course he wants a wedding and love, and all the nice things.
+• The mom saying that she was scared to say the wrong thing, and lose her kid forever.
+• The dad saying that his kid has good taste.`,
+                    quotes: [
+                        "Are you waiting for a big speech to make you stay? Cuz I wont have one.",
+                        "I know, I'm the dramatic one.",
+                        "I don't want to hear sweeping notions of love. It's 2024, the world is burning!",
+                        "We think it's wonderful that you're White.",
+                    ]
+                },
                 {
-                    id: 'm2', title: "Tetris", year: "Cinema", rating: 4.5, url: "https://letterboxd.com/delacruzp/film/tetris/", image: "https://image.tmdb.org/t/p/original/9Vs36h0BYhfy1c7tZ5fn7EYDUuo.jpg", review: `This movie fucking slaps.
+                    id: 'm2',
+                    title: "Tetris",
+                    year: "Cinema",
+                    rating: 4.5,
+                    url: "https://letterboxd.com/delacruzp/film/tetris/",
+                    image: "https://image.tmdb.org/t/p/original/9Vs36h0BYhfy1c7tZ5fn7EYDUuo.jpg",
+                    review: `This movie fucking slaps.
 
 Who knew watching suits do capitalism could be that entertaining. 
 
 Now let me go and play some tetris.`},
                 {
-                    id: 'm3', title: "Sorry, Baby", year: "Cinema", rating: 4.5, url: "https://letterboxd.com/delacruzp/film/sorry-baby-2025/", image: "https://image.tmdb.org/t/p/original/FF9u710hovjIczYHFnuttktLX4.jpg", review: `I really enjoyed this.
+                    id: 'm3',
+                    title: "Sorry, Baby",
+                    year: "Cinema",
+                    rating: 4.5,
+                    url: "https://letterboxd.com/delacruzp/film/sorry-baby-2025/",
+                    image: "https://image.tmdb.org/t/p/original/FF9u710hovjIczYHFnuttktLX4.jpg",
+                    review: `I really enjoyed this.
 
 Granted my expectations going into it where on the floor, but hey apparently that's the key to loving a movie.
 
 Things I loved:
-- The cinematography
-- The shot of them seating by the beach, with the afro backlit, and glowing like a halo.
-- The shot of the snow falling thorugh the window.
-- The Jokes
-- My dad is divorced.
-- Are you safe, in your home? Yes. I have a cat.
-- I'm gay, who would have guessed?
+• The cinematography
+• The shot of them seating by the beach, with the afro backlit, and glowing like a halo.
+• The shot of the snow falling thorugh the window.
+• The Jokes
+• My dad is divorced.
+• Are you safe, in your home? Yes. I have a cat.
+• I'm gay, who would have guessed?
 Honestly, too many to list. Which is why I loved this.
-- The Plot
-- The sandwich scene.
-- The doctor asking questions without a tonal shift.
-- The baby scene.
-- The Acting
+• The Plot
+• The sandwich scene.
+• The doctor asking questions without a tonal shift.
+• The baby scene.
+• The Acting
 
 Dude. I just loved this movie. Bye.` },
-                { id: 'm4', title: "Bugonia", year: "Cinema", rating: 4, url: "https://letterboxd.com/delacruzp/film/bugonia/", image: "https://image.tmdb.org/t/p/original/v7gKTTEJouDyjttZU2l4c8DhxzN.jpg", review: "Can you diversify, the words, of the diversity training?" },
-                { id: 'm5', title: "Eddington", year: "Cinema", rating: 5, url: "https://letterboxd.com/delacruzp/film/eddington/", image: "https://image.tmdb.org/t/p/original/42dmax662RWgdlsWn8EB7P1SBef.jpg", review: "So much could have been avoided if people were just nicer to each other." }
+                {
+                    id: 'm4',
+                    title: "Bugonia",
+                    year: "Cinema",
+                    rating: 4, url: "https://letterboxd.com/delacruzp/film/bugonia/",
+                    image: "https://image.tmdb.org/t/p/original/v7gKTTEJouDyjttZU2l4c8DhxzN.jpg",
+                    review: "Can you diversify, the words, of the diversity training?"
+                },
+                {
+                    id: 'm5',
+                    title: "Eddington",
+                    year: "Cinema",
+                    rating: 5, url: "https://letterboxd.com/delacruzp/film/eddington/",
+                    image: "https://image.tmdb.org/t/p/original/42dmax662RWgdlsWn8EB7P1SBef.jpg",
+                    review: "So much could have been avoided if people were just nicer to each other."
+                }
             ],
             books: [
-                { id: 'b1', title: "Winds of Winter", year: "Literature", rating: 5, url: "https://www.goodreads.com/", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1000", review: "Complex, brutal, and deeply satisfying. Martin proves why he's the master of the genre." },
-                { id: 'b2', title: "Orbital", year: "Literature", rating: 4, url: "https://www.goodreads.com/", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000", review: "A beautiful meditation on humanity from the perspective of the ISS." }
+                {
+                    id: 'b1',
+                    title: "Giovanni’s Room",
+                    year: "Literature",
+                    rating: 5,
+                    url: "https://www.goodreads.com/",
+                    image: "/img/2025-b1.png",
+                    quotes: [
+                        "Soon, it was too late to do anything but moan.",
+                        "Maybe everything bad that happens to you makes you weaker... so you can stand less and less.",
+                        "You will go home and then you will find that home is not home anymore. Then you will really be in trouble. As long as you stay here, you can always think: One day I will go home.",
+                        "It is cruel to have made me want to live only to make my death more bloody.",
+                        "You want to leave Giovanni because he makes you stink. You want to despise Giovanni because he is not afraid of the stink of love. You want to kill him in the name of all your lying little moralities. And you—you are immoral. You are, by far, the most immoral man I have met in all my life. Look, look what you have done to me.",
+                        "Be careful. Please be careful. He gave me an ironical smile. ‘Thank you’, he said, 'You should have given me that advice the night we met”",
+                        "What's the good of an American who isn't happy? Happiness was all we had.",
+                    ]
+                },
+                {
+                    id: 'b2',
+                    title: "A Little Daylight Left: Poems",
+                    year: "2025",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/215805885-a-little-daylight-left",
+                    image: "/img/2025-b2.webp",
+                },
+                {
+                    id: 'b3',
+                    title: "The Seven Moons of Maali Almeida",
+                    year: "2022",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/57224204-the-seven-moons-of-maali-almeida",
+                    image: "/img/2025-b3.jpg",
+                    review: `A difficult read, worth the effort, like all best things.
+
+I forgot how much I love a well thought-out story. A perfect ending is one of the few joys of life.
+
+This booked pushed me, in more ways than one. I got to learned about the Sri Lanka civil war, the racial conflicts in the other side of the world, names that my tongue struggles to pronounced and stories that although noveled, brought up familiar emotions.
+
+At the end of the day, the world keeps spinning, our efforts have a limited impact, our actions hurt our loved ones, but life is definitely not nothing.
+
+New Word:
+- Frock
+
+
+Quotes that made me smile:
+- That women has children to feed. That man has hospital to runs.You take photos, how impressive.
+- His head is not between his shoulders, as heads prefer to be.
+- I'm not your helper, sir. I only helped those that help me... -- You sound like the UN.
+- Usually when you brought women home, which was about as frequent as free and fair elections...
+
+Favorite Paragraphs:
+- "Once you have seen your own face, and recognised the coulour of your eyes, tasted the air and smelled the soil, drunk from the purest fountains and the dirties wells, that is the kindest thing you can say about life, It's not nothing."
+- " And right then with the moon in the sky, you realize you have nothing left to tell and no one to tell it to. You recognize this as a simple fact and are neither dismayed nor gladedened.
+`,
+                    quotes: [
+                        "- Despair always begins as a snack that you nibble on when bored and then becomes a meal that you have thrice a day.",
+                        "- That is the kindest thing you can say about life, It's not nothing.",
+                        "- Let's go to San Francisco and make money and love and let this shit country burn to the ground.",
+                        "- He was handsome and stout just the way you liked them, though you liked them many ways.",
+                        "- The one good thing you can say about a bomb is that it isn't racist or sexist or concerned about class.",
+                        "- Because a blow job isn't sex and it isn't sex if you don't see the other person's face and it doesn't count if you were thinking about him during it",
+                        "- Two promises are worth less than one.",
+                        "- Three promises are worth less than two.",
+                        "- We must all find pointless causes to live for, or why bother with breath?",
+                        "- How much money do you make? – I make what all the world's millionaires do not... What is that? – Enough.",
+                        "- We have fucked it up. All by ourselves.",
+                        "- She stares out the window and let water spills from her eyes. First a drop, then an eye full, then a fountain.",
+                    ]
+                },
+                {
+                    id: 'b4',
+                    title: "Everything Is Tuberculosis: The History and Persistence of Our Deadliest Infection",
+                    year: "2025",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/220341389-everything-is-tuberculosis",
+                    image: "/img/2025-b4.jpg",
+                }
             ],
             essays: [
-                { id: 'e1', title: "Digital Culture", year: "Essays", rating: 4, url: "https://www.nytimes.com/", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000", review: "A provocative look at how modern technology is reshaping our attention spans." },
-                { id: 'e2', title: "The Urban Pulse", year: "Essays", rating: 5, url: "https://www.nytimes.com/", image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=1000", review: "Brilliant analysis of how cities are evolving post-pandemic." }
+                {
+                    id: 'e1', title: "Digital Culture",
+                    year: "Essays",
+                    rating: 4, url: "https://www.nytimes.com/",
+                    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
+                    review: "A provocative look at how modern technology is reshaping our attention spans."
+                },
+                {
+                    id: 'e2', title: "The Urban Pulse",
+                    year: "Essays",
+                    rating: 5, url: "https://www.nytimes.com/",
+                    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=1000",
+                    review: "Brilliant analysis of how cities are evolving post-pandemic."
+                }
             ],
             songs: [
-                { id: 's1', title: "Hologram Heart", year: "Music", rating: 5, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1000", review: "The pop anthem of the summer. Catchy, nostalgic, yet completely futuristic." },
-                { id: 's2', title: "Midnight Echo", year: "Music", rating: 4, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=1000", review: "Atmospheric synth-wave that feels like driving through a city at 3 AM." }
+                {
+                    id: 's1', title: "Hologram Heart",
+                    year: "Music",
+                    rating: 5, url: "https://open.spotify.com/",
+                    image: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1000",
+                    review: "The pop anthem of the summer. Catchy, nostalgic, yet completely futuristic."
+                },
+                {
+                    id: 's2', title: "Midnight Echo",
+                    year: "Music",
+                    rating: 4, url: "https://open.spotify.com/",
+                    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=1000",
+                    review: "Atmospheric synth-wave that feels like driving through a city at 3 AM."
+                }
             ],
             podcasts: [
-                { id: 'p1', title: "The Daily", year: "Podcast", rating: 5, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1000", review: "The standard for journalism. Their 2025 series on energy was particularly brilliant." }
+                {
+                    id: 'p1', title: "The Daily",
+                    year: "Podcast",
+                    rating: 5, url: "https://open.spotify.com/",
+                    image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1000",
+                    review: "The standard for journalism. Their 2025 series on energy was particularly brilliant."
+                }
             ]
         };
 
@@ -447,6 +611,43 @@ Dude. I just loved this movie. Bye.` },
                 );
             };
 
+            const renderReview = (reviewText) => {
+                if (!reviewText) return null;
+
+                // Split by double newline for paragraphs, single for list items
+                const lines = reviewText.split(/\r?\n/);
+                const elements = [];
+                let currentList = [];
+
+                lines.forEach((line, index) => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine && currentList.length === 0) return;
+
+                    if (trimmedLine.startsWith('•')) {
+                        currentList.push(<li key={index}>{trimmedLine.substring(1).trim()}</li>);
+                    } else {
+                        if (currentList.length > 0) {
+                            elements.push(<ul key={`list-${index}`}>{currentList}</ul>);
+                            currentList = [];
+                        }
+                        if (trimmedLine) {
+                            const isHeading = trimmedLine.includes('loved');
+                            elements.push(
+                                <p key={index} className={isHeading ? 'text-white font-medium uppercase tracking-widest text-[10px] mb-4 mt-8' : ''}>
+                                    {trimmedLine}
+                                </p>
+                            );
+                        }
+                    }
+                });
+
+                if (currentList.length > 0) {
+                    elements.push(<ul key="list-final">{currentList}</ul>);
+                }
+
+                return <div className="review-content">{elements}</div>;
+            };
+
             return (
                 <div
                     className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}
@@ -513,11 +714,29 @@ Dude. I just loved this movie. Bye.` },
                                     <h2 className="text-5xl md:text-8xl font-serif mb-8 tracking-tighter">
                                         {selectedItem.title}
                                     </h2>
-                                    <p className="text-lg md:text-2xl font-light text-white/70 leading-relaxed italic mb-12 max-w-2xl">
-                                        "{selectedItem.review}"
-                                    </p>
 
-                                    <a href={selectedItem.url} target="_blank" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all pb-1 border-b border-white/5 hover:border-white/40">
+                                    <div className="text-lg md:text-xl font-light text-white/70 leading-relaxed italic mb-16 max-w-2xl">
+                                        {renderReview(selectedItem.review)}
+                                    </div>
+
+                                    {/* Favorite Quotes Section */}
+                                    {selectedItem.quotes && selectedItem.quotes.length > 0 && (
+                                        <div className="w-full max-w-2xl pt-16 border-t border-white/10 mb-16">
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-10">Favorite Quotes</h3>
+                                            <div className="space-y-12">
+                                                {selectedItem.quotes.map((quote, idx) => (
+                                                    <blockquote key={idx} className="relative group text-left w-full">
+                                                        <span className="absolute -left-4 -top-4 text-4xl font-serif text-white/5 pointer-events-none">"</span>
+                                                        <p className="text-2xl md:text-3xl font-serif italic text-white/80 leading-snug">
+                                                            {quote}
+                                                        </p>
+                                                    </blockquote>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <a href={selectedItem.url} target="_blank" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all pb-1 border-b border-white/5 hover:border-white/40 mb-12">
                                         Source: {CATEGORIES.find(c => c.id === selectedItem.categoryId)?.brand}
                                     </a>
                                 </div>
