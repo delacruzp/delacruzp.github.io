@@ -366,7 +366,8 @@ Dude. I just loved this movie. Bye.` },
                     id: 'm5',
                     title: "Eddington",
                     year: "Cinema",
-                    rating: 5, url: "https://letterboxd.com/delacruzp/film/eddington/",
+                    rating: 4,
+                    url: "https://letterboxd.com/delacruzp/film/eddington/",
                     image: "/img/2025-m5.png",
                     review: "So much could have been avoided if people were just nicer to each other."
                 }
@@ -712,10 +713,15 @@ Favorite Paragraphs:
                                     <img src={item.image} alt={item.title} />
                                     <div className="grid-item-info">
                                         <h4 className="text-sm md:text-xl font-serif title-clamp">{item.title}</h4>
-                                        <div className="flex gap-1 mt-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <div key={i} className={`h-[1px] w-3 ${i < item.rating ? 'bg-white' : 'bg-white/10'}`} />
-                                            ))}
+                                        <div className="flex gap-1 mt-2 items-center">
+                                            {[...Array(5)].map((_, i) => {
+                                                const fill = Math.max(0, Math.min(1, item.rating - i));
+                                                return (
+                                                    <div key={i} className="relative h-1 w-6 bg-white/10 rounded overflow-hidden">
+                                                        <div className="absolute left-0 top-0 h-full bg-white" style={{ width: `${fill * 100}%` }} />
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>
