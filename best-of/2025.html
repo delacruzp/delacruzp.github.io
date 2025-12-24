@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Of 2025 | Portfolio</title>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),
+                url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-pill {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 6px;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .item-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 2px;
+            }
+        }
+
+        .grid-item {
+            position: relative;
+            aspect-ratio: 3/5;
+            overflow: hidden;
+            background-color: var(--bg-color);
+        }
+
+        @media (min-width: 768px) {
+            .grid-item {
+                aspect-ratio: 4/5;
+            }
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            opacity: 0.7;
+        }
+
+        .grid-item:hover img {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .grid-item-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 1rem 1rem 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+        }
+
+        @media (min-width: 768px) {
+            .grid-item-info {
+                padding: 2rem;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.4s ease;
+            }
+
+            .grid-item:hover .grid-item-info {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .slide-up-enter {
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+        const CATEGORIES = [
+            { id: 'movies', label: 'Cinema', titleLabel: 'Best Movies', brand: 'Letterboxd' },
+            { id: 'books', label: 'Literature', titleLabel: 'Best Books', brand: 'Goodreads' },
+            { id: 'essays', label: 'Essays', titleLabel: 'Best Essays', brand: 'NY Times' },
+            { id: 'songs', label: 'Music', titleLabel: 'Best Songs', brand: 'Spotify' },
+            { id: 'podcasts', label: 'Podcasts', titleLabel: 'Best Podcasts', brand: 'Spotify' }
+        ];
+
+        const INITIAL_DATA = {
+            movies: [
+                { id: 'm1', title: "Mickey 17", year: "Cinema", rating: 5, url: "https://letterboxd.com/", image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1000", review: "Bong Joon-ho returns with a masterpiece of sci-fi existentialism. Robert Pattinson is electric." },
+                { id: 'm2', title: "Superman", year: "Cinema", rating: 4, url: "https://letterboxd.com/", image: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&q=80&w=1000", review: "A hopeful, bright return for the Man of Steel. Captures the pure essence of heroism." },
+                { id: 'm3', title: "Deep Space", year: "Cinema", rating: 5, url: "https://letterboxd.com/", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1000", review: "The cinematography is staggering. A slow-burn epic that stays with you for weeks." }
+            ],
+            books: [
+                { id: 'b1', title: "Winds of Winter", year: "Literature", rating: 5, url: "https://www.goodreads.com/", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1000", review: "Complex, brutal, and deeply satisfying. Martin proves why he's the master of the genre." },
+                { id: 'b2', title: "Orbital", year: "Literature", rating: 4, url: "https://www.goodreads.com/", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000", review: "A beautiful meditation on humanity from the perspective of the ISS." }
+            ],
+            essays: [
+                { id: 'e1', title: "Digital Culture", year: "Essays", rating: 4, url: "https://www.nytimes.com/", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000", review: "A provocative look at how modern technology is reshaping our attention spans." },
+                { id: 'e2', title: "The Urban Pulse", year: "Essays", rating: 5, url: "https://www.nytimes.com/", image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=1000", review: "Brilliant analysis of how cities are evolving post-pandemic." }
+            ],
+            songs: [
+                { id: 's1', title: "Hologram Heart", year: "Music", rating: 5, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1000", review: "The pop anthem of the summer. Catchy, nostalgic, yet completely futuristic." },
+                { id: 's2', title: "Midnight Echo", year: "Music", rating: 4, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=1000", review: "Atmospheric synth-wave that feels like driving through a city at 3 AM." }
+            ],
+            podcasts: [
+                { id: 'p1', title: "The Daily", year: "Podcast", rating: 5, url: "https://open.spotify.com/", image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1000", review: "The standard for journalism. Their 2025 series on energy was particularly brilliant." }
+            ]
+        };
+
+        const Icons = {
+            home: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>,
+            movies: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="2" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /></svg>,
+            books: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 20V2h11v18a2 2 0 0 0 2-2V2" /></svg>,
+            essays: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>,
+            songs: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>,
+            podcasts: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v1a7 7 0 0 1-14 0v-1" /></svg>
+        };
+
+        const App = () => {
+            const [view, setView] = useState('landing');
+            const [activeCategory, setActiveCategory] = useState(null);
+            const [selectedId, setSelectedId] = useState(null);
+
+            const allItems = useMemo(() => {
+                return CATEGORIES.flatMap(cat =>
+                    INITIAL_DATA[cat.id].map(item => ({ ...item, categoryId: cat.id }))
+                );
+            }, []);
+
+            const currentIndex = useMemo(() =>
+                allItems.findIndex(item => item.id === selectedId),
+                [selectedId, allItems]);
+
+            const selectedItem = allItems[currentIndex] || null;
+
+            const navigateTo = useCallback((index) => {
+                if (index >= 0 && index < allItems.length) {
+                    setSelectedId(allItems[index].id);
+                    setActiveCategory(allItems[index].categoryId);
+                }
+            }, [allItems]);
+
+            const nextItem = useCallback(() => {
+                if (currentIndex < allItems.length - 1) navigateTo(currentIndex + 1);
+            }, [currentIndex, navigateTo]);
+
+            const prevItem = useCallback(() => {
+                if (currentIndex > 0) navigateTo(currentIndex - 1);
+            }, [currentIndex, navigateTo]);
+
+            const touchStartX = useRef(null);
+            const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+            const handleTouchEnd = (e) => {
+                if (touchStartX.current === null) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartX.current - touchEndX;
+                if (Math.abs(diff) > 50) {
+                    diff > 0 ? nextItem() : prevItem();
+                }
+                touchStartX.current = null;
+            };
+
+            useEffect(() => {
+                const handleKey = (e) => {
+                    if (!selectedId) return;
+                    if (e.key === 'ArrowRight') nextItem();
+                    if (e.key === 'ArrowLeft') prevItem();
+                    if (e.key === 'Escape') setSelectedId(null);
+                };
+                window.addEventListener('keydown', handleKey);
+                return () => window.removeEventListener('keydown', handleKey);
+            }, [selectedId, nextItem, prevItem]);
+
+            const handleCategoryClick = (catId) => {
+                setActiveCategory(catId);
+                setView('gallery');
+                setSelectedId(null);
+            };
+
+            const closeDetail = () => setSelectedId(null);
+
+            const headerTitle = useMemo(() => {
+                if (selectedId) {
+                    return CATEGORIES.find(c => c.id === selectedItem?.categoryId)?.titleLabel;
+                }
+                if (activeCategory) {
+                    return CATEGORIES.find(c => c.id === activeCategory).titleLabel;
+                }
+                return 'Best Of';
+            }, [selectedId, activeCategory, selectedItem]);
+
+            return (
+                <div className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}>
+                    <div className={`hero-bg ${view === 'gallery' || selectedId ? 'scale-110 blur-md opacity-20' : ''}`} />
+
+                    {/* Header */}
+                    <header className={`fixed top-0 left-0 w-full p-6 md:p-12 z-50 flex justify-between items-center transition-all duration-500 ${view === 'gallery' || selectedId ? 'bg-black/40 backdrop-blur-md' : 'bg-transparent'}`}>
+                        <div className="flex items-center gap-4">
+                            {(view === 'gallery' || selectedId) && (
+                                <button onClick={() => { setView('landing'); setActiveCategory(null); setSelectedId(null); }} className="p-2 opacity-60 hover:opacity-100 transition-opacity">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+                                </button>
+                            )}
+                            <h1 className="text-[10px] md:text-sm font-medium tracking-[0.4em] uppercase opacity-40">Archive 2025</h1>
+                        </div>
+                        <h2 className="text-xl md:text-5xl font-serif italic tracking-tight">
+                            {headerTitle}
+                        </h2>
+                    </header>
+
+                    {/* Content Views */}
+                    {view === 'landing' && (
+                        <div className="fixed inset-0 flex flex-col items-center justify-center p-8 z-10">
+                            <h1 className="text-8xl md:text-[14rem] font-serif leading-none tracking-tighter mb-4 opacity-80">2025</h1>
+                            <p className="text-xs md:text-sm font-light opacity-40 tracking-[0.5em] uppercase text-center">A curation of excellence</p>
+                        </div>
+                    )}
+
+                    {view === 'gallery' && !selectedId && (
+                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12 slide-up-enter">
+                            <div className="item-grid border border-white/10 rounded-lg overflow-hidden">
+                                {INITIAL_DATA[activeCategory].map((item) => (
+                                    <div key={item.id} className="grid-item cursor-pointer group" onClick={() => setSelectedId(item.id)}>
+                                        <img src={item.image} alt={item.title} />
+                                        <div className="grid-item-info">
+                                            <h4 className="text-sm md:text-xl font-serif">{item.title}</h4>
+                                            <div className="flex gap-1 mt-2">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <div key={i} className={`h-[1px] w-3 ${i < item.rating ? 'bg-white' : 'bg-white/10'}`} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </main>
+                    )}
+
+                    {/* Detail Modal */}
+                    {selectedId && selectedItem && (
+                        <div
+                            className="fixed inset-0 z-[100] bg-black touch-none overflow-y-auto no-scrollbar"
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
+                        >
+                            {/* Cinematic Image Header - Now 50% height */}
+                            <div className="relative w-full h-[50vh]">
+                                <img src={selectedItem.image} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 via-[10%] via-black/40 via-[40%] to-black to-[90%]" />
+                            </div>
+
+                            {/* Detail Content */}
+                            <div className="relative z-10 -mt-24 md:-mt-32 pb-48">
+                                <div className="max-w-4xl mx-auto px-6 flex flex-col items-center text-center">
+                                    <span className="inline-block text-[10px] uppercase tracking-[0.5em] text-white/40 mb-6 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
+                                        {selectedItem.year}
+                                    </span>
+                                    <h2 className="text-5xl md:text-8xl font-serif mb-8 tracking-tighter">
+                                        {selectedItem.title}
+                                    </h2>
+                                    <p className="text-lg md:text-2xl font-light text-white/70 leading-relaxed italic mb-12 max-w-2xl">
+                                        "{selectedItem.review}"
+                                    </p>
+
+                                    <a href={selectedItem.url} target="_blank" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all pb-1 border-b border-white/5 hover:border-white/40">
+                                        Source: {CATEGORIES.find(c => c.id === selectedItem.categoryId)?.brand}
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* FIXED Pagination Controls - Always Visible */}
+                            <div className="fixed bottom-0 left-0 right-0 z-[120] pb-12 pt-16 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+                                <div className="flex flex-col items-center justify-center gap-4 pointer-events-auto">
+                                    <div className="flex items-center gap-6">
+                                        <button onClick={prevItem} disabled={currentIndex === 0} className={`p-4 rounded-full border border-white/5 transition-all ${currentIndex === 0 ? 'opacity-10' : 'hover:bg-white/10 backdrop-blur-sm'}`}>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                                        </button>
+
+                                        <div className="flex gap-2">
+                                            {allItems.map((_, i) => (
+                                                <div key={i} className={`h-1 rounded-full transition-all duration-500 ${i === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/10'}`} />
+                                            ))}
+                                        </div>
+
+                                        <button onClick={nextItem} disabled={currentIndex === allItems.length - 1} className={`p-4 rounded-full border border-white/5 transition-all ${currentIndex === allItems.length - 1 ? 'opacity-10' : 'hover:bg-white/10 backdrop-blur-sm'}`}>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+                                        </button>
+                                    </div>
+                                    <p className="text-[9px] uppercase tracking-[0.2em] opacity-20">Browse through the collection</p>
+                                </div>
+                            </div>
+
+                            <button onClick={closeDetail} className="fixed top-6 right-6 md:top-12 md:right-12 z-[130] p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 transition-all">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Navigation Pill - Hidden when Detail is open to avoid UI clash */}
+                    {!selectedId && (
+                        <div className="fixed bottom-8 left-0 right-0 flex justify-center z-[60] px-4 pointer-events-none">
+                            <nav className="flex items-center gap-1 md:gap-2 nav-pill pointer-events-auto">
+                                <button
+                                    onClick={() => { setView('landing'); setActiveCategory(null); setSelectedId(null); }}
+                                    className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${view === 'landing' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
+                                >
+                                    <Icons.home />
+                                    <span className="hidden md:inline text-[10px] font-medium uppercase tracking-[0.2em] ml-2">Home</span>
+                                </button>
+                                <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                                {CATEGORIES.map(cat => {
+                                    const IconComp = Icons[cat.id];
+                                    const isActive = activeCategory === cat.id;
+                                    return (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => handleCategoryClick(cat.id)}
+                                            className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${isActive && !selectedId ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
+                                        >
+                                            <span className="md:hidden"><IconComp /></span>
+                                            <span className="hidden md:inline text-[10px] font-medium uppercase tracking-[0.2em]">{cat.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </nav>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
