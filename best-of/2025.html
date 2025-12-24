@@ -35,7 +35,8 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            overflow: hidden;
+            /* Prevent body bounce/overscroll on mobile */
+            overscroll-behavior-y: none;
         }
 
         .font-serif {
@@ -503,65 +504,70 @@ Favorite Paragraphs:
 
             const handleCategoryClick = useCallback((catId) => {
                 if (catId === activeCategory) return;
-
                 if (view === 'landing') {
                     // Coming from home: Slide from the RIGHT as requested
                     setSlideDirection('right');
                 } else if (activeCategory) {
                     const currentIdx = CATEGORIES.findIndex(c => c.id === activeCategory);
                     const newIdx = CATEGORIES.findIndex(c => c.id === catId);
-
-                    // Incoming direction based on category list order
-                    const direction = newIdx < currentIdx ? 'left' : 'right';
-                    setSlideDirection(direction);
-
-                    // Set current as exiting
+                    setSlideDirection(newIdx < currentIdx ? 'left' : 'right');
                     setExitingCategory(activeCategory);
-                    // Clear exiting state after animation duration
                     setTimeout(() => setExitingCategory(null), 800);
                 }
-
                 setActiveCategory(catId);
                 setView('gallery');
                 setSelectedId(null);
             }, [view, activeCategory]);
 
-            // Navigation Helpers for Category Swiping
-            const cycleCategory = useCallback((direction) => {
-                if (!activeCategory) {
-                    if (direction === 'next') handleCategoryClick(CATEGORIES[0].id);
+            const handleHomeClick = useCallback(() => {
+                if (view === 'landing') return;
+                setExitingCategory(activeCategory);
+                setSlideDirection('left');
+                setActiveCategory(null);
+                setSelectedId(null);
+                setView('landing');
+                setTimeout(() => setExitingCategory(null), 800);
+            }, [view, activeCategory]);
+
+            // --- Updated Touch Handling to allow scrolling ---
+            const touchStartPos = useRef({ x: null, y: null });
+            const handleTouchStart = (e) => {
+                touchStartPos.current = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+            };
+
+            const handleTouchEnd = (e) => {
+                if (touchStartPos.current.x === null) return;
+
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+
+                const diffX = touchStartPos.current.x - touchEndX;
+                const diffY = touchStartPos.current.y - touchEndY;
+
+                // If vertical movement is significant, prioritize scrolling over swiping
+                if (Math.abs(diffY) > Math.abs(diffX)) {
+                    touchStartPos.current = { x: null, y: null };
                     return;
                 }
-                const idx = CATEGORIES.findIndex(c => c.id === activeCategory);
-                let nextIdx = direction === 'next' ? idx + 1 : idx - 1;
 
-                if (nextIdx >= CATEGORIES.length) nextIdx = 0;
-                if (nextIdx < 0) nextIdx = CATEGORIES.length - 1;
-
-                handleCategoryClick(CATEGORIES[nextIdx].id);
-            }, [activeCategory, handleCategoryClick]);
-
-            // Unified Touch Handling
-            const touchStartX = useRef(null);
-            const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-            const handleTouchEnd = (e) => {
-                if (touchStartX.current === null) return;
-                const touchEndX = e.changedTouches[0].clientX;
-                const diff = touchStartX.current - touchEndX;
-
-                if (Math.abs(diff) > 50) {
+                // Horizontal Swipe threshold
+                if (Math.abs(diffX) > 60) {
                     if (selectedId) {
-                        // In Detail Modal: Swipe between items
-                        diff > 0 ? nextItem() : prevItem();
+                        diffX > 0 ? nextItem() : prevItem();
                     } else if (view === 'landing') {
-                        // In Landing: Swipe left to enter first category
-                        if (diff > 0) handleCategoryClick(CATEGORIES[0].id);
+                        if (diffX > 0) handleCategoryClick(CATEGORIES[0].id);
                     } else if (view === 'gallery') {
-                        // In Gallery: Swipe between categories
-                        diff > 0 ? cycleCategory('next') : cycleCategory('prev');
+                        const idx = CATEGORIES.findIndex(c => c.id === activeCategory);
+                        let nextIdx = diffX > 0 ? idx + 1 : idx - 1;
+                        if (nextIdx >= 0 && nextIdx < CATEGORIES.length) {
+                            handleCategoryClick(CATEGORIES[nextIdx].id);
+                        }
                     }
                 }
-                touchStartX.current = null;
+                touchStartPos.current = { x: null, y: null };
             };
 
             useEffect(() => {
@@ -575,19 +581,6 @@ Favorite Paragraphs:
                 return () => window.removeEventListener('keydown', handleKey);
             }, [selectedId, nextItem, prevItem]);
 
-            const closeDetail = () => setSelectedId(null);
-
-            const headerTitle = useMemo(() => {
-                if (selectedId) {
-                    return CATEGORIES.find(c => c.id === selectedItem?.categoryId)?.titleLabel;
-                }
-                if (activeCategory) {
-                    return CATEGORIES.find(c => c.id === activeCategory).titleLabel;
-                }
-                return 'Best Of';
-            }, [selectedId, activeCategory, selectedItem]);
-
-            // Helper to render a specific grid category
             const renderGrid = (catId, animationClass, isExiting = false) => {
                 if (!catId) return null;
                 return (
@@ -625,7 +618,6 @@ Favorite Paragraphs:
                 lines.forEach((line, index) => {
                     const trimmedLine = line.trim();
                     if (!trimmedLine && currentList.length === 0) return;
-
                     if (trimmedLine.startsWith('•')) {
                         currentList.push(<li key={index}>{trimmedLine.substring(1).trim()}</li>);
                     } else {
@@ -643,34 +635,29 @@ Favorite Paragraphs:
                         }
                     }
                 });
-
-                if (currentList.length > 0) {
-                    elements.push(<ul key="list-final">{currentList}</ul>);
-                }
-
+                if (currentList.length > 0) elements.push(<ul key="list-final">{currentList}</ul>);
                 return <div className="review-content">{elements}</div>;
             };
 
             return (
                 <div
-                    className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}
+                    className={`relative min-h-screen bg-black text-white ${selectedId ? '' : 'overflow-hidden'}`}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                 >
                     <div className={`hero-bg ${view === 'gallery' || selectedId ? 'scale-110 blur-md opacity-20' : ''}`} />
 
-                    {/* Header */}
-                    <header className={`fixed top-0 left-0 w-full p-6 md:p-12 z-50 flex justify-between items-center transition-all duration-500 ${view === 'gallery' || selectedId ? 'bg-black/40 backdrop-blur-md' : 'bg-transparent'}`}>
+                    <header className={`fixed top-0 left-0 w-full p-6 md:p-12 z-[80] flex justify-between items-center transition-all duration-500 ${view === 'gallery' || selectedId ? 'bg-black/40 backdrop-blur-md' : 'bg-transparent'}`}>
                         <div className="flex items-center gap-4">
                             {(view === 'gallery' || selectedId) && (
-                                <button onClick={() => { setView('landing'); setActiveCategory(null); setSelectedId(null); }} className="p-2 opacity-60 hover:opacity-100 transition-opacity">
+                                <button onClick={handleHomeClick} className="p-2 opacity-60 hover:opacity-100 transition-opacity">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
                                 </button>
                             )}
                             <h1 className="text-[10px] md:text-sm font-medium tracking-[0.4em] uppercase opacity-40">Archive 2025</h1>
                         </div>
                         <h2 className="text-xl md:text-5xl font-serif italic tracking-tight">
-                            {headerTitle}
+                            {selectedId ? CATEGORIES.find(c => c.id === selectedItem?.categoryId)?.titleLabel : (activeCategory ? CATEGORIES.find(c => c.id === activeCategory).titleLabel : 'Best Of')}
                         </h2>
                     </header>
 
@@ -683,25 +670,17 @@ Favorite Paragraphs:
                     )}
 
                     {view === 'gallery' && !selectedId && (
-                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12">
+                        <main className="min-h-screen pt-32 md:pt-48 pb-32 relative z-10 max-w-[1600px] mx-auto px-4 md:px-12 overflow-y-auto no-scrollbar h-screen">
                             <div className="gallery-container">
-                                {exitingCategory && renderGrid(
-                                    exitingCategory,
-                                    slideDirection === 'left' ? 'exit-to-right' : 'exit-to-left',
-                                    true
-                                )}
-                                {activeCategory && renderGrid(
-                                    activeCategory,
-                                    slideDirection === 'left' ? 'slide-from-left' : 'slide-from-right',
-                                    false
-                                )}
+                                {exitingCategory && renderGrid(exitingCategory, slideDirection === 'left' ? 'exit-to-right' : 'exit-to-left', true)}
+                                {activeCategory && renderGrid(activeCategory, slideDirection === 'left' ? 'slide-from-left' : 'slide-from-right', false)}
                             </div>
                         </main>
                     )}
 
                     {/* Detail Modal */}
                     {selectedId && selectedItem && (
-                        <div className="fixed inset-0 z-[100] bg-black touch-none overflow-y-auto no-scrollbar">
+                        <div className="fixed inset-0 z-[100] bg-black overflow-y-auto no-scrollbar overscroll-contain">
                             {/* Cinematic Image Header - Now 50% height */}
                             <div className="relative w-full h-[50vh]">
                                 <img src={selectedItem.image} className="w-full h-full object-cover" />
@@ -717,7 +696,6 @@ Favorite Paragraphs:
                                     <h2 className="text-5xl md:text-8xl font-serif mb-8 tracking-tighter">
                                         {selectedItem.title}
                                     </h2>
-
                                     <div className="text-lg md:text-xl font-light text-white/70 leading-relaxed italic mb-16 max-w-2xl">
                                         {renderReview(selectedItem.review)}
                                     </div>
@@ -730,15 +708,12 @@ Favorite Paragraphs:
                                                 {selectedItem.quotes.map((quote, idx) => (
                                                     <blockquote key={idx} className="relative group text-left w-full">
                                                         <span className="absolute -left-4 -top-4 text-4xl font-serif text-white/5 pointer-events-none">"</span>
-                                                        <p className="text-2xl md:text-3xl font-serif italic text-white/80 leading-snug">
-                                                            {quote}
-                                                        </p>
+                                                        <p className="text-2xl md:text-3xl font-serif italic text-white/80 leading-snug">{quote}</p>
                                                     </blockquote>
                                                 ))}
                                             </div>
                                         </div>
                                     )}
-
                                     <a href={selectedItem.url} target="_blank" className="text-[10px] uppercase tracking-[0.3em] text-white/30 hover:text-white transition-all pb-1 border-b border-white/5 hover:border-white/40 mb-12">
                                         Source: {CATEGORIES.find(c => c.id === selectedItem.categoryId)?.brand}
                                     </a>
@@ -752,13 +727,11 @@ Favorite Paragraphs:
                                         <button onClick={prevItem} disabled={currentIndex === 0} className={`p-4 rounded-full border border-white/5 transition-all ${currentIndex === 0 ? 'opacity-10' : 'hover:bg-white/10 backdrop-blur-sm'}`}>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
                                         </button>
-
                                         <div className="flex gap-2">
                                             {allItems.map((_, i) => (
                                                 <div key={i} className={`h-1 rounded-full transition-all duration-500 ${i === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/10'}`} />
                                             ))}
                                         </div>
-
                                         <button onClick={nextItem} disabled={currentIndex === allItems.length - 1} className={`p-4 rounded-full border border-white/5 transition-all ${currentIndex === allItems.length - 1 ? 'opacity-10' : 'hover:bg-white/10 backdrop-blur-sm'}`}>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
                                         </button>
@@ -767,7 +740,7 @@ Favorite Paragraphs:
                                 </div>
                             </div>
 
-                            <button onClick={closeDetail} className="fixed top-6 right-6 md:top-12 md:right-12 z-[130] p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 transition-all">
+                            <button onClick={() => setSelectedId(null)} className="fixed top-6 right-6 md:top-12 md:right-12 z-[130] p-3 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/10 transition-all">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
                             </button>
                         </div>
@@ -777,23 +750,15 @@ Favorite Paragraphs:
                     {!selectedId && (
                         <div className="fixed bottom-8 left-0 right-0 flex justify-center z-[60] px-4 pointer-events-none">
                             <nav className="flex items-center gap-1 md:gap-2 nav-pill pointer-events-auto">
-                                <button
-                                    onClick={() => { setView('landing'); setActiveCategory(null); setSelectedId(null); }}
-                                    className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${view === 'landing' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
-                                >
+                                <button onClick={handleHomeClick} className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${view === 'landing' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}>
                                     <Icons.home />
                                     <span className="hidden md:inline text-[10px] font-medium uppercase tracking-[0.2em] ml-2">Home</span>
                                 </button>
                                 <div className="w-[1px] h-4 bg-white/10 mx-1" />
                                 {CATEGORIES.map(cat => {
                                     const IconComp = Icons[cat.id];
-                                    const isActive = activeCategory === cat.id;
                                     return (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => handleCategoryClick(cat.id)}
-                                            className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${isActive && !selectedId ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
-                                        >
+                                        <button key={cat.id} onClick={() => handleCategoryClick(cat.id)} className={`flex items-center p-3 md:px-6 md:py-2.5 rounded-full transition-all duration-300 ${activeCategory === cat.id ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}>
                                             <span className="md:hidden"><IconComp /></span>
                                             <span className="hidden md:inline text-[10px] font-medium uppercase tracking-[0.2em]">{cat.label}</span>
                                         </button>
