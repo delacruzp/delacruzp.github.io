@@ -231,14 +231,46 @@
                 if (currentIndex > 0) navigateTo(currentIndex - 1);
             }, [currentIndex, navigateTo]);
 
+            const handleCategoryClick = useCallback((catId) => {
+                setActiveCategory(catId);
+                setView('gallery');
+                setSelectedId(null);
+            }, []);
+
+            // Navigation Helpers for Category Swiping
+            const cycleCategory = useCallback((direction) => {
+                if (!activeCategory) {
+                    if (direction === 'next') handleCategoryClick(CATEGORIES[0].id);
+                    return;
+                }
+                const idx = CATEGORIES.findIndex(c => c.id === activeCategory);
+                let nextIdx = direction === 'next' ? idx + 1 : idx - 1;
+
+                if (nextIdx >= CATEGORIES.length) nextIdx = 0;
+                if (nextIdx < 0) nextIdx = CATEGORIES.length - 1;
+
+                handleCategoryClick(CATEGORIES[nextIdx].id);
+            }, [activeCategory, handleCategoryClick]);
+
+            // Unified Touch Handling
             const touchStartX = useRef(null);
             const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
             const handleTouchEnd = (e) => {
                 if (touchStartX.current === null) return;
                 const touchEndX = e.changedTouches[0].clientX;
                 const diff = touchStartX.current - touchEndX;
+
                 if (Math.abs(diff) > 50) {
-                    diff > 0 ? nextItem() : prevItem();
+                    if (selectedId) {
+                        // In Detail Modal: Swipe between items
+                        diff > 0 ? nextItem() : prevItem();
+                    } else if (view === 'landing') {
+                        // In Landing: Swipe left to enter first category
+                        if (diff > 0) handleCategoryClick(CATEGORIES[0].id);
+                    } else if (view === 'gallery') {
+                        // In Gallery: Swipe between categories
+                        diff > 0 ? cycleCategory('next') : cycleCategory('prev');
+                    }
                 }
                 touchStartX.current = null;
             };
@@ -254,12 +286,6 @@
                 return () => window.removeEventListener('keydown', handleKey);
             }, [selectedId, nextItem, prevItem]);
 
-            const handleCategoryClick = (catId) => {
-                setActiveCategory(catId);
-                setView('gallery');
-                setSelectedId(null);
-            };
-
             const closeDetail = () => setSelectedId(null);
 
             const headerTitle = useMemo(() => {
@@ -273,7 +299,11 @@
             }, [selectedId, activeCategory, selectedItem]);
 
             return (
-                <div className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}>
+                <div
+                    className={`relative min-h-screen bg-black text-white ${view === 'landing' ? 'overflow-hidden' : 'overflow-y-auto no-scrollbar'}`}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                >
                     <div className={`hero-bg ${view === 'gallery' || selectedId ? 'scale-110 blur-md opacity-20' : ''}`} />
 
                     {/* Header */}
@@ -293,9 +323,9 @@
 
                     {/* Content Views */}
                     {view === 'landing' && (
-                        <div className="fixed inset-0 flex flex-col items-center justify-center p-8 z-10">
+                        <div className="fixed inset-0 flex flex-col items-center justify-center p-8 z-10 cursor-pointer" onClick={() => handleCategoryClick(CATEGORIES[0].id)}>
                             <h1 className="text-8xl md:text-[14rem] font-serif leading-none tracking-tighter mb-4 opacity-80">2025</h1>
-                            <p className="text-xs md:text-sm font-light opacity-40 tracking-[0.5em] uppercase text-center">A curation of excellence</p>
+                            <p className="text-xs md:text-sm font-light opacity-40 tracking-[0.5em] uppercase text-center">Swipe left or click to enter</p>
                         </div>
                     )}
 
@@ -321,11 +351,7 @@
 
                     {/* Detail Modal */}
                     {selectedId && selectedItem && (
-                        <div
-                            className="fixed inset-0 z-[100] bg-black touch-none overflow-y-auto no-scrollbar"
-                            onTouchStart={handleTouchStart}
-                            onTouchEnd={handleTouchEnd}
-                        >
+                        <div className="fixed inset-0 z-[100] bg-black touch-none overflow-y-auto no-scrollbar">
                             {/* Cinematic Image Header - Now 50% height */}
                             <div className="relative w-full h-[50vh]">
                                 <img src={selectedItem.image} className="w-full h-full object-cover" />
