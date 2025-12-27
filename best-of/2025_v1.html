@@ -40,6 +40,48 @@
         .card-inner:hover {
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
+
+        /* Clamp titles to 3 lines and show ellipsis */
+        .clamp-3 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        /* Star rating display (shows up to 5 stars, partial fill via width) */
+        .stars {
+            position: relative;
+            display: inline-block;
+            line-height: 1;
+        }
+        .stars-back, .stars-front {
+            white-space: nowrap;
+            letter-spacing: 0.12em;
+            font-size: 1rem;
+            line-height: 1;
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        .stars-back {
+            color: rgba(255,255,255,0.45);
+        }
+        .stars-front {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            overflow: hidden;
+            color: rgb(34 197 94 / 1);
+            pointer-events: none;
+        }
+
+        /* Preserve line breaks in long review text */
+        .preserve-whitespace {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body class="selection-green">
@@ -166,6 +208,7 @@ Things I loved:
 • My dad is divorced.
 • Are you safe, in your home? Yes. I have a cat.
 • I'm gay, who would have guessed?
+
 Honestly, too many to list. Which is why I loved this.
 • The Plot
 • The sandwich scene.
@@ -199,7 +242,7 @@ Dude. I just loved this movie. Bye.` },
                 {
                     id: 'b1',
                     title: "Giovanni’s Room",
-                    year: "Literature",
+                    year: "1956",
                     rating: 5,
                     site: "Goodreads",
                     url: "https://www.goodreads.com/",
@@ -242,7 +285,6 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
 New Word:
 - Frock
 
-
 Quotes that made me smile:
 - That women has children to feed. That man has hospital to runs.You take photos, how impressive.
 - His head is not between his shoulders, as heads prefer to be.
@@ -251,21 +293,21 @@ Quotes that made me smile:
 
 Favorite Paragraphs:
 - "Once you have seen your own face, and recognised the coulour of your eyes, tasted the air and smelled the soil, drunk from the purest fountains and the dirties wells, that is the kindest thing you can say about life, It's not nothing."
-- " And right then with the moon in the sky, you realize you have nothing left to tell and no one to tell it to. You recognize this as a simple fact and are neither dismayed nor gladedened.
+- "And right then with the moon in the sky, you realize you have nothing left to tell and no one to tell it to. You recognize this as a simple fact and are neither dismayed nor gladdened.
 `,
                     quotes: [
-                        "- Despair always begins as a snack that you nibble on when bored and then becomes a meal that you have thrice a day.",
-                        "- That is the kindest thing you can say about life, It's not nothing.",
-                        "- Let's go to San Francisco and make money and love and let this shit country burn to the ground.",
-                        "- He was handsome and stout just the way you liked them, though you liked them many ways.",
-                        "- The one good thing you can say about a bomb is that it isn't racist or sexist or concerned about class.",
-                        "- Because a blow job isn't sex and it isn't sex if you don't see the other person's face and it doesn't count if you were thinking about him during it",
-                        "- Two promises are worth less than one.",
-                        "- Three promises are worth less than two.",
-                        "- We must all find pointless causes to live for, or why bother with breath?",
-                        "- How much money do you make? – I make what all the world's millionaires do not... What is that? – Enough.",
-                        "- We have fucked it up. All by ourselves.",
-                        "- She stares out the window and let water spills from her eyes. First a drop, then an eye full, then a fountain.",
+                        "Despair always begins as a snack that you nibble on when bored and then becomes a meal that you have thrice a day.",
+                        "That is the kindest thing you can say about life, It's not nothing.",
+                        "Let's go to San Francisco and make money and love and let this shit country burn to the ground.",
+                        "He was handsome and stout just the way you liked them, though you liked them many ways.",
+                        "The one good thing you can say about a bomb is that it isn't racist or sexist or concerned about class.",
+                        "Because a blow job isn't sex and it isn't sex if you don't see the other person's face and it doesn't count if you were thinking about him during it",
+                        "Two promises are worth less than one.",
+                        "Three promises are worth less than two.",
+                        "We must all find pointless causes to live for, or why bother with breath?",
+                        "How much money do you make? – I make what all the world's millionaires do not... What is that? – Enough.",
+                        "We have fucked it up. All by ourselves.",
+                        "She stares out the window and let water spills from her eyes. First a drop, then an eye full, then a fountain.",
                     ]
                 },
                 {
@@ -436,11 +478,20 @@ Favorite Paragraphs:
                             </span>
                             <span class="text-[9px] font-bold text-white/60 uppercase tracking-widest">${item.id}</span>
                         </div>
-                        <h3 class="font-black text-white text-3xl leading-none tracking-tighter mb-2 group-hover:text-green-400 transition-colors uppercase italic italic">
+                        <h3 class="font-black text-white text-3xl leading-none tracking-tighter mb-2 group-hover:text-green-400 transition-colors uppercase italic clamp-3">
                             ${item.title}
-                        </h3>
+                        </h3>                        
                         <div class="h-0.5 w-8 bg-green-400 rounded-full transition-all duration-500 group-hover:w-full opacity-0 group-hover:opacity-100"></div>
-                        <p class="mt-4 text-[10px] text-white/70 font-bold uppercase tracking-[0.2em] group-hover:text-white transition-colors">Open Documentation —></p>
+                        ${item.rating ? `
+                        <div class="mt-2 flex items-center gap-3">
+                            <div class="stars" aria-hidden="true" title="${item.rating}">
+                                <div class="stars-back">★★★★★</div>
+                                <div class="stars-front" style="width: ${Math.round((Math.max(0, Math.min(5, item.rating))/5)*100)}%">★★★★★</div>
+                            </div>
+                            <div class="text-[10px] text-white/70 font-bold uppercase tracking-[0.2em]">${item.rating}</div>
+                        </div>
+                        ` : ''}                        
+                        <p class="mt-4 text-[10px] text-white/70 font-bold uppercase tracking-[0.2em] group-hover:text-white transition-colors">My thoughts —></p>
                     </div>
                 </div>
             `;
@@ -526,14 +577,11 @@ Favorite Paragraphs:
                             <i data-lucide="${typeIcon}" class="w-5 h-5 text-green-600"></i>
                             <span class="text-xs font-black uppercase tracking-[0.4em] text-green-600">${item.type}</span>
                         </div>
-                        <h2 class="text-5xl font-black text-slate-800 leading-none tracking-tighter italic">${item.title}</h2>
+                        <h2 class="text-3xl font-black text-slate-800 leading-none tracking-tighter italic clamp-3">${item.title}</h2>
                     </div>
                 </div>
                 <div class="p-10 pt-4 overflow-y-auto">
                     <div class="flex flex-wrap items-center gap-6 text-[10px] text-slate-400 mb-10 border-b border-slate-100 pb-8 font-black uppercase tracking-widest">
-                        <div class="flex items-center gap-2">
-                             <span class="text-slate-300">Year:</span> <span>${item.year}</span>
-                        </div>
                         ${item.rating ? `
                             <div class="flex items-center gap-2">
                                 <span class="text-slate-300">Rating:</span>
@@ -550,7 +598,7 @@ Favorite Paragraphs:
                     ${item.review ? `
                         <div class="mb-10">
                             <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-300 mb-4">Review</h4>
-                            <div class="text-slate-600 text-lg leading-relaxed font-medium">"${item.review}"</div>
+                            <div class="text-slate-600 text-lg leading-relaxed font-medium preserve-whitespace">${item.review}</div>
                         </div>
                     ` : ''}
                     
