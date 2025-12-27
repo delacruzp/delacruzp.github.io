@@ -287,6 +287,7 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
         };
 
         const Z_DISTANCE = 300;
+        const INITIAL_OFFSET = 2500; // Extra distance between header and first item
         const FOG_DEPTH = 4000;
         let allItems = [];
 
@@ -299,8 +300,8 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
                 });
             });
 
-            // Set spacer height
-            const totalHeight = (allItems.length + 3) * Z_DISTANCE;
+            // Set spacer height (including initial offset)
+            const totalHeight = (allItems.length * Z_DISTANCE) + INITIAL_OFFSET + (2 * Z_DISTANCE);
             document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
 
             // Create item elements
@@ -312,7 +313,7 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
 
             // Set final heading position
             const outro = document.getElementById('outro-heading');
-            outro.style.transform = `translate3d(-50%, -50%, ${-(allItems.length + 1) * Z_DISTANCE}px)`;
+            outro.style.transform = `translate3d(-50%, -50%, ${-(allItems.length * Z_DISTANCE) - INITIAL_OFFSET - Z_DISTANCE}px)`;
             outro.style.display = 'block';
 
             lucide.createIcons();
@@ -325,7 +326,8 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
             el.className = 'tunnel-item absolute top-1/2 left-1/2 w-64 -ml-32 -mt-40 cursor-pointer transition-transform duration-300';
             el.id = `item-${index}`;
             
-            const itemZ = -(index + 1) * Z_DISTANCE;
+            // Start items after the INITIAL_OFFSET
+            const itemZ = - (INITIAL_OFFSET + (index * Z_DISTANCE));
             const seed = index * 234.56;
             const angle = seed % (2 * Math.PI);
             const radius = 250 + (seed % 350);
@@ -370,7 +372,8 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
 
             // Update Intro Opacity based on distance
             const intro = document.getElementById('intro-heading');
-            const introOpacity = 1 - (scrollY / 500);
+            // Allow title to stay visible longer by dividing by a larger number
+            const introOpacity = 1 - (scrollY / (INITIAL_OFFSET * 0.4));
             intro.style.opacity = Math.max(0, introOpacity);
             intro.style.pointerEvents = introOpacity <= 0 ? 'none' : 'auto';
 
@@ -383,6 +386,7 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
                 const relativeZ = z + scrollY;
 
                 let opacity = 0;
+                // Items appear when they are within range
                 if (relativeZ > 200) opacity = 0;
                 else if (relativeZ > 0) opacity = 1 - (relativeZ / 200);
                 else if (relativeZ < -FOG_DEPTH) opacity = 0;
