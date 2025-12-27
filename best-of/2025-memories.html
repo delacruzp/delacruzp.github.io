@@ -45,6 +45,9 @@
             -webkit-text-stroke: 2.5px rgba(30, 41, 59, 0.2);
             color: #00000019;
             text-transform: uppercase;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            backface-visibility: hidden;
         }
         .selection-green::selection {
             background-color: #bbf7d0;
@@ -140,13 +143,13 @@
         }
     </style>
 </head>
-<body class="selection-green">
+<body class="selection-green fixed-viewport">
 
     <!-- Scroll Spacer -->
     <div id="scroll-spacer"></div>
 
     <!-- Fixed Viewport -->
-    <div class="fixed inset-0 overflow-hidden fixed-viewport">
+    <div class="fixed inset-0 overflow-hidden">
         <!-- Dynamic Background Layer -->
         <div id="bg-overlay" class="absolute inset-0 bg-slate-100 -z-20"></div>
         
@@ -466,7 +469,7 @@ Favorite Paragraphs:
         };
 
         const Z_DISTANCE = 1000;
-        const INITIAL_OFFSET = 3000; 
+        const INITIAL_OFFSET = 1000; 
         const CATEGORY_GAP = 3000;  
         const FOG_DEPTH = 4500;
 
@@ -485,9 +488,11 @@ Favorite Paragraphs:
             let currentZ = -INITIAL_OFFSET; 
 
             ['movies', 'books', 'essays', 'images'].forEach((type, idx) => {
+                // Place the header midway between the previous last item and the next first item
+                const headerZ = currentZ + (Z_DISTANCE - CATEGORY_GAP) / 2;
                 categoryHeaders.push({
                     title: type,
-                    z: currentZ + (Z_DISTANCE * 0.5),
+                    z: headerZ,
                     index: idx + 1
                 });
                 currentZ -= CATEGORY_GAP;
@@ -497,9 +502,8 @@ Favorite Paragraphs:
                 });
             });
 
-            const totalHeight = Math.abs(currentZ)/5 + Z_DISTANCE * 1;
+            const totalHeight = Math.abs(currentZ)/5 + Z_DISTANCE * 1.2;
             document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
-            console.log(`Scroll spacer height set to ${totalHeight}px`);
 
             const container = document.getElementById('items-container');
             
@@ -608,13 +612,16 @@ Favorite Paragraphs:
             const spacerEl = document.getElementById('scroll-spacer');
             const spacerHeight = parseInt(spacerEl.style.height) || spacerEl.offsetHeight;
             const maxScroll = Math.max(1, spacerHeight - window.innerHeight);
-            console.log(`Spacer height: ${spacerHeight}px, Max scroll: ${maxScroll}px, window.scrollY: ${rawScroll}px, scaled scrollY: ${scrollY}px spacerEl.offsetHeight: ${spacerEl.offsetHeight}px window.innerHeight : ${window.innerHeight}px`);
             const rawProgress = (rawScroll / maxScroll) * 100;
             const progress = Math.min(100, Math.max(0, rawProgress));
             document.getElementById('progress-bar').style.width = `${progress}%`;
 
             const intro = document.getElementById('intro-heading');
-            intro.style.opacity = Math.max(0, 1 - (scrollY / 1200));
+            // Use the raw scroll value for opacity to avoid rendering artifacts from the scaled Z transform.
+            const introOpacity = Math.max(0, 1 - (rawScroll / 240));
+            // snap near-1 and near-0 values to avoid subpixel antialiasing artifacts
+            const clampedOpacity = introOpacity > 0.995 ? 1 : (introOpacity < 0.005 ? 0 : introOpacity);
+            intro.style.opacity = clampedOpacity;
 
             let currentActiveType = "";
             let activeTheme = THEMES.intro;
@@ -817,7 +824,6 @@ Favorite Paragraphs:
             e.preventDefault();
             window.deferredPrompt = e; // store for later use
             showInstallBtn();
-            console.log('beforeinstallprompt fired');
         });
 
         // Handle the install button click
@@ -827,11 +833,6 @@ Favorite Paragraphs:
                 if (!promptEvent) return;
                 promptEvent.prompt();
                 const choice = await promptEvent.userChoice;
-                if (choice.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                } else {
-                    console.log('User dismissed the install prompt');
-                }
                 window.deferredPrompt = null;
                 hideInstallBtn();
             });
