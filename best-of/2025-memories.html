@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Theme color for mobile browsers (updated dynamically to match active background) -->
+    <meta name="theme-color" content="#f1f5f9">
+    <!-- Windows tile color -->
+    <meta name="msapplication-TileColor" content="#f1f5f9">
+    <!-- iOS web app / status bar hints -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>2025 Annual Recap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -585,9 +593,39 @@ Favorite Paragraphs:
             });
 
             const bgOverlayEl = document.getElementById('bg-overlay');
+
+            // Update background color and mobile theme/meta tags to match active section
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            const msMeta = document.querySelector('meta[name="msapplication-TileColor"]');
+            const appleMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+
+            let metaColor = activeTheme;
             if (!bgOverlayEl.dataset.imageActive) {
                 bgOverlayEl.style.backgroundColor = activeTheme;
+            } else {
+                // when an image is active, use transparent so the image shows through
+                metaColor = 'transparent';
             }
+
+            if (themeMeta && themeMeta.content !== metaColor) themeMeta.content = metaColor;
+            if (msMeta && msMeta.content !== activeTheme) msMeta.content = activeTheme;
+
+            function isDarkHex(hex) {
+                if (!hex || hex === 'transparent') return false;
+                const c = hex.replace('#','');
+                if (c.length !== 6) return false;
+                const r = parseInt(c.substring(0,2),16);
+                const g = parseInt(c.substring(2,4),16);
+                const b = parseInt(c.substring(4,6),16);
+                // Perceived brightness
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                return brightness < 150;
+            }
+
+            if (appleMeta) {
+                appleMeta.content = (metaColor === 'transparent' ? 'default' : (isDarkHex(metaColor) ? 'black-translucent' : 'default'));
+            }
+
             document.getElementById('active-category').innerText = `${currentActiveType}`;
 
             allItems.forEach((item, index) => {
