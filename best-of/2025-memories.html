@@ -29,7 +29,7 @@
             transition: background-color 1.5s ease;
         }
         .outline-text {
-            -webkit-text-stroke: 1.5px rgba(30, 41, 59, 0.2);
+            -webkit-text-stroke: 2.5px rgba(30, 41, 59, 0.2);
             color: #00000019;
             text-transform: uppercase;
         }
@@ -139,7 +139,7 @@
             <div class="text-left">
                 <div id="active-category" class="text-[10px] font-black text-green-600 uppercase tracking-[0.4em] mb-4 transition-all duration-700">Voyage Status</div>
                 <div class="w-64 h-1.5 bg-slate-200 rounded-full overflow-hidden pointer-events-auto border border-white/50 backdrop-blur-sm">
-                    <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
+                    <div id="progress-bar" class="h-full bg-green-500" style="width: 0%"></div>
                 </div>
             </div>
             <!-- <p id="z-plane-display" class="text-[9px] font-mono text-slate-500 bg-white/80 backdrop-blur-xl px-4 py-2 rounded-full border border-slate-200 uppercase tracking-widest shadow-sm">Depth: 0m</p> -->
@@ -410,7 +410,7 @@ Favorite Paragraphs:
 
         const Z_DISTANCE = 1000;
         const INITIAL_OFFSET = 3000; 
-        const CATEGORY_GAP = 1000;  
+        const CATEGORY_GAP = 3000;  
         const FOG_DEPTH = 4500;
 
         const THEMES = {
@@ -440,8 +440,9 @@ Favorite Paragraphs:
                 });
             });
 
-            const totalHeight = Math.abs(currentZ) + Z_DISTANCE*2;
+            const totalHeight = Math.abs(currentZ)/5 + Z_DISTANCE * 1.15;
             document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
+            console.log(`Scroll spacer height set to ${totalHeight}px`);
 
             const container = document.getElementById('items-container');
             
@@ -539,7 +540,8 @@ Favorite Paragraphs:
         }
 
         function handleScroll() {
-            const scrollY = window.scrollY * 5;
+            const rawScroll = window.scrollY;
+            const scrollY = rawScroll * 5;
             const scene = document.getElementById('tunnel-scene');
             const bgOverlay = document.getElementById('bg-overlay');
             
@@ -549,7 +551,8 @@ Favorite Paragraphs:
             const spacerEl = document.getElementById('scroll-spacer');
             const spacerHeight = parseInt(spacerEl.style.height) || spacerEl.offsetHeight;
             const maxScroll = Math.max(1, spacerHeight - window.innerHeight);
-            const rawProgress = (scrollY / maxScroll) * 100;
+            console.log(`Spacer height: ${spacerHeight}px, Max scroll: ${maxScroll}px, window.scrollY: ${rawScroll}px, scaled scrollY: ${scrollY}px spacerEl.offsetHeight: ${spacerEl.offsetHeight}px window.innerHeight : ${window.innerHeight}px`);
+            const rawProgress = (rawScroll / maxScroll) * 100;
             const progress = Math.min(100, Math.max(0, rawProgress));
             document.getElementById('progress-bar').style.width = `${progress}%`;
 
