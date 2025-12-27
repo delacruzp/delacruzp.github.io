@@ -30,7 +30,7 @@
         }
         .outline-text {
             -webkit-text-stroke: 1.5px rgba(30, 41, 59, 0.2);
-            color: #00000060;
+            color: #00000019;
             text-transform: uppercase;
         }
         .selection-green::selection {
@@ -366,7 +366,28 @@ Favorite Paragraphs:
                     site: "Wirecutter",
                 }
             ],
-            songs: [],
+            images: [
+                {
+                    id: 'i1',
+                    image: "/img/2025-i1.jpg",
+                },
+                {
+                    id: 'i2',
+                    image: "/img/2025-i2.jpg",
+                },
+                {
+                    id: 'i3',
+                    image: "/img/2025-i3.jpg",
+                },
+                {
+                    id: 'i4',
+                    image: "/img/2025-i4.jpg",
+                },
+                {
+                    id: 'i5',
+                    image: "/img/2025-i5.jpg",
+                }
+            ],
             podcasts: [
                 {
                     id: 'p1', title: "The Daily",
@@ -387,7 +408,8 @@ Favorite Paragraphs:
             "intro": "#f1f5f9",
             "movies": "#f1f5f9",
             "books": "#baf7e4",
-            "essays": "#c2e0ff"
+            "essays": "#c2e0ff",
+            "images": "#f1f5f9",
         };
         
         let allItems = [];
@@ -396,7 +418,7 @@ Favorite Paragraphs:
         function init() {
             let currentZ = -INITIAL_OFFSET;
 
-            ['movies', 'books', 'essays'].forEach((type, idx) => {
+            ['movies', 'books', 'essays', 'images'].forEach((type, idx) => {
                 categoryHeaders.push({
                     title: type,
                     z: currentZ + (Z_DISTANCE * 0.5),
@@ -478,14 +500,14 @@ Favorite Paragraphs:
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent"></div>
                     
                     <!-- Content Overlay -->
-                    <div class="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start text-left">
+                    <div class="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start text-left ${item.type === 'images' ? 'hidden' : ''}">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="bg-green-500 text-[9px] font-black text-white px-2.5 py-1 rounded uppercase tracking-tighter">
                                 ${item.type}
                             </span>
-                            <span class="text-[9px] font-bold text-white/60 uppercase tracking-widest">${item.id}</span>
                         </div>
-                        <h3 class="font-black text-white text-3xl leading-none tracking-tighter mb-2 group-hover:text-green-400 transition-colors uppercase italic clamp-3">
+
+                        <h3 class="font-black text-white text-3xl leading-none tracking-tighter mb-2 group-hover:text-green-400 transition-colors uppercase italic clamp-3 ">
                             ${item.title}
                         </h3>                        
                         <div class="h-0.5 w-8 bg-green-400 rounded-full transition-all duration-500 group-hover:w-full opacity-0 group-hover:opacity-100"></div>
@@ -572,6 +594,21 @@ Favorite Paragraphs:
             const container = document.getElementById('modal-container');
             const content = document.getElementById('modal-content');
             const typeIcon = item.type === 'movies' ? 'film' : item.type === 'books' ? 'book-open' : 'pen-tool';
+
+            if (item.type === 'images') {
+                content.innerHTML = `
+                <button onclick="closeModal()" class="absolute top-8 right-8 z-10 p-3 bg-white/80 hover:bg-white text-slate-800 rounded-full backdrop-blur-xl transition-all border border-slate-200 group">
+                    <i data-lucide="x" class="w-6 h-6 group-hover:rotate-90 transition-transform"></i>
+                </button>
+                <div class="h-full w-full flex items-center justify-center bg-black/90">
+                    <img src="${item.image}" class="max-h-[80vh] max-w-full object-contain">
+                </div>
+                `;
+                container.classList.remove('hidden');
+                lucide.createIcons();
+                document.body.style.overflow = 'hidden';
+                return;
+            }
 
             content.innerHTML = `
                 <button onclick="closeModal()" class="absolute top-8 right-8 z-10 p-3 bg-white/80 hover:bg-white text-slate-800 rounded-full backdrop-blur-xl transition-all border border-slate-200 group">
