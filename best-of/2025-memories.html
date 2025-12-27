@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,33 +27,41 @@
             margin: 0;
             color: #1e293b;
         }
+
         .perspective-container {
             perspective: 1200px;
             perspective-origin: center center;
         }
+
         .tunnel-scene {
             transform-style: preserve-3d;
             will-change: transform;
         }
-        .tunnel-item, .category-header {
+
+        .tunnel-item,
+        .category-header {
             transform-style: preserve-3d;
             will-change: transform, opacity, filter;
         }
+
         #bg-overlay {
             transition: background-color 1.5s ease;
         }
+
         .outline-text {
-            -webkit-text-stroke: 2.5px rgba(30, 41, 59, 0.2);
+            -webkit-text-stroke: 4.5px rgba(30, 41, 59, 1.0);
             color: #00000019;
             text-transform: uppercase;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
             backface-visibility: hidden;
         }
+
         .selection-green::selection {
             background-color: #bbf7d0;
             color: #14532d;
         }
+
         .card-inner:hover {
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
@@ -73,16 +82,20 @@
             display: inline-block;
             line-height: 1;
         }
-        .stars-back, .stars-front {
+
+        .stars-back,
+        .stars-front {
             white-space: nowrap;
             letter-spacing: 0.12em;
             font-size: 1rem;
             line-height: 1;
             font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         }
+
         .stars-back {
-            color: rgba(255,255,255,0.45);
+            color: rgba(255, 255, 255, 0.45);
         }
+
         .stars-front {
             position: absolute;
             left: 0;
@@ -126,23 +139,26 @@
             gap: .5rem;
             padding: .45rem .7rem;
             border-radius: .6rem;
-            background: rgba(255,255,255,0.85);
-            color: #064e3b; /* slightly darker, still subtle */
+            background: rgba(255, 255, 255, 0.85);
+            color: #064e3b;
+            /* slightly darker, still subtle */
             font-weight: 600;
             font-size: .85rem;
-            box-shadow: 0 6px 12px rgba(2,6,23,0.06);
-            border: 1px solid rgba(2,6,23,0.04);
+            box-shadow: 0 6px 12px rgba(2, 6, 23, 0.06);
+            border: 1px solid rgba(2, 6, 23, 0.04);
             opacity: 0.92;
             transition: opacity .18s ease, transform .15s ease;
             backdrop-filter: blur(6px);
             cursor: pointer;
         }
+
         .install-btn:hover {
             opacity: 1;
             transform: translateY(-1px);
         }
     </style>
 </head>
+
 <body class="selection-green fixed-viewport">
 
     <!-- Scroll Spacer -->
@@ -152,20 +168,25 @@
     <div class="fixed inset-0 overflow-hidden">
         <!-- Dynamic Background Layer -->
         <div id="bg-overlay" class="absolute inset-0 bg-slate-100 -z-20"></div>
-        
+
         <!-- Subtle Grid -->
-        <div id="grid-bg" class="absolute inset-0 opacity-20 -z-10" 
-             style="background-image: radial-gradient(circle, #64748b 1px, transparent 1px); background-size: 80px 80px;">
+        <div id="grid-bg" class="absolute inset-0 opacity-20 -z-10"
+            style="background-image: radial-gradient(circle, #64748b 1px, transparent 1px); background-size: 80px 80px;">
         </div>
 
         <div class="perspective-container w-full h-full relative">
             <div id="tunnel-scene" class="tunnel-scene absolute inset-0 w-full h-full">
-                
+
                 <!-- Intro Heading -->
-                <div id="intro-heading" class="absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full"
-                     style="transform: translate3d(-50%, -50%, 0px);">
-                    <h1 class="text-8xl md:text-[12rem] font-black text-slate-800 tracking-tighter mb-4 opacity-90 leading-none italic">2025</h1>
-                    <p class="text-sm md:text-base text-slate-500 uppercase tracking-[1em] font-bold leading-none pl-[1em]">Memories</p>
+                <div id="intro-heading"
+                    class="absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full"
+                    style="transform: translate3d(-50%, -50%, 0px);">
+                    <h1
+                        class="text-8xl md:text-[12rem] font-black text-slate-800 tracking-tighter mb-4 opacity-90 leading-none italic">
+                        2025</h1>
+                    <p
+                        class="text-sm md:text-base text-slate-500 uppercase tracking-[1em] font-bold leading-none pl-[1em]">
+                        Memories</p>
                     <div class="mt-24 animate-bounce text-slate-400">
                         <i data-lucide="chevron-down" class="mx-auto w-10 h-10"></i>
                         <span class="text-xs uppercase tracking-widest mt-4 block font-bold">Scroll forward</span>
@@ -187,8 +208,11 @@
         <!-- Progress UI -->
         <div class="fixed bottom-10 left-10 right-10 flex justify-between items-end pointer-events-none">
             <div class="text-left">
-                <div id="active-category" class="text-[10px] font-black text-green-600 uppercase tracking-[0.4em] mb-4 transition-all duration-700">Voyage Status</div>
-                <div class="w-64 h-1.5 bg-slate-200 rounded-full overflow-hidden pointer-events-auto border border-white/50 backdrop-blur-sm">
+                <div id="active-category"
+                    class="text-[10px] font-black text-green-600 uppercase tracking-[0.4em] mb-4 transition-all duration-700">
+                    Voyage Status</div>
+                <div
+                    class="w-64 h-1.5 bg-slate-200 rounded-full overflow-hidden pointer-events-auto border border-white/50 backdrop-blur-sm">
                     <div id="progress-bar" class="h-full bg-green-500" style="width: 0%"></div>
                 </div>
             </div>
@@ -199,18 +223,20 @@
     <!-- Modal Container -->
     <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-white/80 backdrop-blur-2xl" onclick="closeModal()"></div>
-        <div id="modal-content" class="relative w-full max-w-xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col text-slate-800">
+        <div id="modal-content"
+            class="relative w-full max-w-xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col text-slate-800">
             <!-- Modal data injected via JS -->
         </div>
     </div>
 
-    <button id="install-btn" class="install-btn" aria-hidden="true" style="display:none" aria-label="Install app" title="Install app">
+    <button id="install-btn" class="install-btn" aria-hidden="true" style="display:none" aria-label="Install app"
+        title="Install app">
         <i data-lucide="download" class="w-5 h-5" aria-hidden="true"></i>
         <span class="sr-only">Install app</span>
     </button>
 
     <script>
-        
+
         const INITIAL_DATA = {
             movies: [
                 {
@@ -263,7 +289,7 @@ Now let me go and play some tetris.`},
                     image: "/img/2025-m3.webp",
                     review: `I really enjoyed this.
 
-Granted my expectations going into it where on the floor, but hey apparently that's the key to loving a movie.
+Granted my expectations going into it were on the floor, but hey apparently that's the key to loving a movie.
 
 Things I loved:
 • The cinematography
@@ -430,7 +456,7 @@ Favorite Paragraphs:
                     site: "Wirecutter",
                 }
             ],
-            images: [
+            photography: [
                 {
                     id: 'i1',
                     image: "/img/2025-i1.webp",
@@ -457,20 +483,11 @@ Favorite Paragraphs:
                     imageHd: "/img/2025-i5.jpg",
                 }
             ],
-            podcasts: [
-                {
-                    id: 'p1', title: "The Daily",
-                    year: "Podcast",
-                    rating: 5, url: "https://open.spotify.com/",
-                    image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1000",
-                    review: "The standard for journalism. Their 2025 series on energy was particularly brilliant."
-                }
-            ]
         };
 
         const Z_DISTANCE = 1000;
-        const INITIAL_OFFSET = 1000; 
-        const CATEGORY_GAP = 3000;  
+        const INITIAL_OFFSET = 1500;
+        const CATEGORY_GAP = 3000;
         const FOG_DEPTH = 4500;
 
         const THEMES = {
@@ -478,16 +495,16 @@ Favorite Paragraphs:
             "movies": "#f1f5f9",
             "books": "#baf7e4",
             "essays": "#c2e0ff",
-            "images": "#f1f5f9",
+            "photography": "#f1f5f9",
         };
 
         let allItems = [];
         let categoryHeaders = [];
 
         function init() {
-            let currentZ = -INITIAL_OFFSET; 
+            let currentZ = -INITIAL_OFFSET;
 
-            ['movies', 'books', 'essays', 'images'].forEach((type, idx) => {
+            ['movies', 'books', 'essays', 'photography'].forEach((type, idx) => {
                 // Place the header midway between the previous last item and the next first item
                 const headerZ = currentZ + (Z_DISTANCE - CATEGORY_GAP) / 2;
                 categoryHeaders.push({
@@ -502,11 +519,11 @@ Favorite Paragraphs:
                 });
             });
 
-            const totalHeight = Math.abs(currentZ)/5 + Z_DISTANCE * 1.2;
+            const totalHeight = Math.abs(currentZ) / 5 + Z_DISTANCE * 1.2;
             document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
 
             const container = document.getElementById('items-container');
-            
+
             categoryHeaders.forEach((header, idx) => {
                 const el = document.createElement('div');
                 el.className = 'category-header absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full pointer-events-none';
@@ -544,7 +561,7 @@ Favorite Paragraphs:
             const el = document.createElement('div');
             el.className = 'tunnel-item absolute top-1/2 left-1/2 w-80 -ml-40 -mt-56 cursor-pointer group';
             el.id = `item-${index}`;
-            
+
             const seed = index * 456.78;
             const angle = seed % (2 * Math.PI);
             const radius = 300 + (seed % 450);
@@ -571,7 +588,7 @@ Favorite Paragraphs:
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent"></div>
                     
                     <!-- Content Overlay -->
-                    <div class="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start text-left ${item.type === 'images' ? 'hidden' : ''}">
+                    <div class="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start text-left ${item.type === 'photography' ? 'hidden' : ''}">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="bg-green-500 text-[9px] font-black text-white px-2.5 py-1 rounded uppercase tracking-tighter">
                                 ${item.type}
@@ -586,7 +603,7 @@ Favorite Paragraphs:
                         <div class="mt-2 flex items-center gap-3">
                             <div class="stars" aria-hidden="true" title="${item.rating}">
                                 <div class="stars-back">★★★★★</div>
-                                <div class="stars-front" style="width: ${Math.round((Math.max(0, Math.min(5, item.rating))/5)*100)}%">★★★★★</div>
+                                <div class="stars-front" style="width: ${Math.round((Math.max(0, Math.min(5, item.rating)) / 5) * 100)}%">★★★★★</div>
                             </div>
                             <div class="text-[10px] text-white/70 font-bold uppercase tracking-[0.2em]">${item.rating}</div>
                         </div>
@@ -605,7 +622,7 @@ Favorite Paragraphs:
             const scrollY = rawScroll * 5;
             const scene = document.getElementById('tunnel-scene');
             const bgOverlay = document.getElementById('bg-overlay');
-            
+
             scene.style.transform = `translateZ(${scrollY}px)`;
             document.getElementById('grid-bg').style.transform = `translateZ(0) translateY(${-scrollY * 0.1}px)`;
 
@@ -630,13 +647,13 @@ Favorite Paragraphs:
                 const el = document.getElementById(`header-${idx}`);
                 const relativeZ = header.z + scrollY;
                 let opacity = 0;
-                
+
                 if (relativeZ > 400) opacity = 0;
                 else if (relativeZ > 0) opacity = 1 - (relativeZ / 400);
                 else opacity = 1 - (Math.abs(relativeZ) / 2500);
 
                 el.style.opacity = Math.max(0, opacity);
-                
+
                 if (relativeZ > -900 && relativeZ < 7000) {
                     currentActiveType = header.title;
                     activeTheme = THEMES[header.title];
@@ -663,11 +680,11 @@ Favorite Paragraphs:
 
             function isDarkHex(hex) {
                 if (!hex || hex === 'transparent') return false;
-                const c = hex.replace('#','');
+                const c = hex.replace('#', '');
                 if (c.length !== 6) return false;
-                const r = parseInt(c.substring(0,2),16);
-                const g = parseInt(c.substring(2,4),16);
-                const b = parseInt(c.substring(4,6),16);
+                const r = parseInt(c.substring(0, 2), 16);
+                const g = parseInt(c.substring(2, 4), 16);
+                const b = parseInt(c.substring(4, 6), 16);
                 // Perceived brightness
                 const brightness = (r * 299 + g * 587 + b * 114) / 1000;
                 return brightness < 150;
@@ -704,7 +721,7 @@ Favorite Paragraphs:
             const content = document.getElementById('modal-content');
             const typeIcon = item.type === 'movies' ? 'film' : item.type === 'books' ? 'book-open' : 'pen-tool';
 
-            if (item.type === 'images') {
+            if (item.type === 'photography') {
                 // Toggle the site background to this image instead of opening the modal
                 const bg = document.getElementById('bg-overlay');
                 const isActive = bg.dataset.imageActive === '1';
@@ -850,4 +867,5 @@ Favorite Paragraphs:
         }
     </script>
 </body>
+
 </html>
