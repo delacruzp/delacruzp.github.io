@@ -1,0 +1,140 @@
+{
+  "movies": [
+    {
+      "id": "m1",
+      "title": "A Nice Indian Boy",
+      "year": "Cinema",
+      "rating": 5,
+      "url": "https://letterboxd.com/delacruzp/film/a-nice-indian-boy/",
+      "image": "/img/2025-m1.png",
+      "review": "I was laughing out loud through out this entire movie. The only moments when I was not laughing it was, because I was aggressively sobbing.\n\nI must admit I was apprehensive going into this movie. But everything about it was SO f-ing good. Every single joke landed, my entire movie theater was enjoying the movie, which made the whole experience that more enjoyable.\n\nI think it's my first time watching a movie, where the relationship with the parents it's not a zero sum game. It's not all in, neither all out. It's hard, complicated, awkward and at time sad, and still they keep trying to make it work.\n\nI loved the splitting the movie into chapters. Love the way it tell the stories. Both the cutaways from the date, to the discussion of the date, and back. The sister narration. Ugh I love this movie.\n\nScenes where I cried:\n• Naveen saying that of course he wants a wedding and love, and all the nice things.\n• The mom saying that she was scared to say the wrong thing, and lose her kid forever.\n• The dad saying that his kid has good taste.",
+      "quotes": [
+        "Are you waiting for a big speech to make you stay? Cuz I wont have one.",
+        "I know, I'm the dramatic one.",
+        "I don't want to hear sweeping notions of love. It's 2024, the world is burning!",
+        "We think it's wonderful that you're White."
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Tetris",
+      "year": "Cinema",
+      "rating": 4.5,
+      "url": "https://letterboxd.com/delacruzp/film/tetris/",
+      "image": "/img/2025-m2.png",
+      "review": "This movie fucking slaps.\n\nWho knew watching suits do capitalism could be that entertaining. \n\nNow let me go and play some tetris."
+    },
+    {
+      "id": "m3",
+      "title": "Sorry, Baby",
+      "year": "Cinema",
+      "rating": 4.5,
+      "url": "https://letterboxd.com/delacruzp/film/sorry-baby-2025/",
+      "image": "/img/2025-m3.png",
+      "review": "I really enjoyed this.\n\nGranted my expectations going into it where on the floor, but hey apparently that's the key to loving a movie.\n\nThings I loved:\n• The cinematography\n• The shot of them seating by the beach, with the afro backlit, and glowing like a halo.\n• The shot of the snow falling thorugh the window.\n• The Jokes\n• My dad is divorced.\n• Are you safe, in your home? Yes. I have a cat.\n• I'm gay, who would have guessed?\nHonestly, too many to list. Which is why I loved this.\n• The Plot\n• The sandwich scene.\n• The doctor asking questions without a tonal shift.\n• The baby scene.\n• The Acting\n\nDude. I just loved this movie. Bye."
+    },
+    {
+      "id": "m4",
+      "title": "Bugonia",
+      "year": "Cinema",
+      "rating": 4,
+      "url": "https://letterboxd.com/delacruzp/film/bugonia/",
+      "image": "/img/2025-m4.png",
+      "review": "Can you diversify, the words, of the diversity training?"
+    },
+    {
+      "id": "m5",
+      "title": "Eddington",
+      "year": "Cinema",
+      "rating": 4,
+      "url": "https://letterboxd.com/delacruzp/film/eddington/",
+      "image": "/img/2025-m5.png",
+      "review": "So much could have been avoided if people were just nicer to each other."
+    }
+  ],
+  "books": [
+    {
+      "id": "b1",
+      "title": "Giovanni’s Room",
+      "year": "Literature",
+      "rating": 5,
+      "url": "https://www.goodreads.com/",
+      "image": "/img/2025-b1.png",
+      "quotes": [
+        "Soon, it was too late to do anything but moan.",
+        "Maybe everything bad that happens to you makes you weaker... so you can stand less and less.",
+        "You will go home and then you will find that home is not home anymore. Then you will really be in trouble. As long as you stay here, you can always think: One day I will go home.",
+        "It is cruel to have made me want to live only to make my death more bloody.",
+        "You want to leave Giovanni because he makes you stink. You want to despise Giovanni because he is not afraid of the stink of love. You want to kill him in the name of all your lying little moralities. And you—you are immoral. You are, by far, the most immoral man I have met in all my life. Look, look what you have done to me.",
+        "Be careful. Please be careful. He gave me an ironical smile. ‘Thank you’, he said, 'You should have given me that advice the night we met”",
+        "What's the good of an American who isn't happy? Happiness was all we had."
+      ]
+    },
+    {
+      "id": "b2",
+      "title": "A Little Daylight Left: Poems",
+      "year": "2025",
+      "rating": 4,
+      "url": "https://www.goodreads.com/book/show/215805885-a-little-daylight-left",
+      "image": "/img/2025-b2.webp"
+    },
+    {
+      "id": "b3",
+      "title": "The Seven Moons of Maali Almeida",
+      "year": "2022",
+      "rating": 4,
+      "url": "https://www.goodreads.com/book/show/57224204-the-seven-moons-of-maali-almeida",
+      "image": "/img/2025-b3.png",
+      "review": "A difficult read, worth the effort, like all best things.\n\nI forgot how much I love a well thought-out story. A perfect ending is one of the few joys of life.\n\nThis booked pushed me, in more ways than one. I got to learned about the Sri Lanka civil war, the racial conflicts in the other side of the world, names that my tongue struggles to pronounced and stories that although noveled, brought up familiar emotions.\n\nAt the end of the day, the world keeps spinning, our efforts have a limited impact, our actions hurt our loved ones, but life is definitely not nothing.\n"
+    },
+    {
+      "id": "b4",
+      "title": "Everything Is Tuberculosis: The History and Persistence of Our Deadliest Infection",
+      "year": "2025",
+      "rating": 4,
+      "url": "https://www.goodreads.com/book/show/220341389-everything-is-tuberculosis",
+      "image": "/img/2025-b4.jpg"
+    }
+  ],
+  "essays": [
+    {
+      "id": "e1",
+      "title": "The Goon Squad",
+      "year": "Nov, 2025",
+      "author": "Daniel Kolitz",
+      "url": "https://harpers.org/archive/2025/11/the-goon-squad-daniel-kolitz-porn-masturbation-loneliness/",
+      "image": "/img/2025-e1.webp",
+      "site": "Harpers",
+      "review": "Loneliness, porn’s next frontier, and the dream of endless masturbation."
+    },
+    {
+      "id": "e2",
+      "title": "We’ve Reached Peak Gay Sluttiness",
+      "year": "Aug 29, 2025",
+      "author": "Steven Phillips-Horst",
+      "url": "https://www.thecut.com/article/ghb-doxypep-sniffies-peak-gay-sluttiness-era-nyc.html",
+      "image": "/img/2025-e2.webp",
+      "site": "The Cut",
+      "review": "Party all weekend, hook up with anyone, never get an STD — or even a hangover. Who says nobody’s having sex anymore?"
+    },
+    {
+      "id": "e3",
+      "title": "She Wanted to Save the World From A.I. Then the Killings Started.",
+      "year": "Jul 6, 2025",
+      "author": "Christopher Beam",
+      "url": "https://www.nytimes.com/2025/07/06/business/ziz-lasota-zizians-rationalists.html?smid=nytcore-android-share",
+      "image": "/img/2025-e3.webp",
+      "site": "NY Times",
+      "review": "At first, Ziz LaSota seemed much like any other philosophically inclined young tech aspirant. Now, she and her followers are in jail, six people are dead, and Rationalists are examining whether their ideas played a role."
+    },
+    {
+      "id": "e4",
+      "title": "We Bought a 450-Pound Mystery Pallet Packed With Returned Goods From Amazon and Beyond. Here’s What We Found Inside.",
+      "year": "Nov 17, 2025",
+      "author": "Annemarie Conte",
+      "url": "https://www.nytimes.com/wirecutter/reviews/mystery-amazon-pallet-unboxing/",
+      "image": "/img/2025-e4.webp",
+      "site": "Wirecutter"
+    }
+  ]
+}

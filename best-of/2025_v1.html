@@ -14,6 +14,7 @@
             background-color: black;
             color: white;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         .font-mono { font-family: 'JetBrains+Mono', monospace; }
@@ -30,7 +31,13 @@
         }
 
         .background-image {
-            transition: opacity 1.5s ease-in-out, transform 10s linear;
+            transition: opacity 1.5s ease-in-out;
+            will-change: opacity;
+        }
+
+        .background-image img {
+            transition: transform 10s linear;
+            will-change: transform;
         }
 
         .section-content {
@@ -46,23 +53,12 @@
             filter: blur(0);
         }
 
-        .hide-scroll {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .hide-scroll::-webkit-scrollbar {
+        .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
-
-        .active-tab {
-            background-color: white;
-            color: black;
-            transform: scale(1.05);
-        }
-
-        /* Prevent scroll in index mode */
-        body.index-mode {
-            overflow: hidden;
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -81,15 +77,6 @@
                 <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
                 <span class="font-bold tracking-tighter text-xs md:text-base uppercase">Recap '25</span>
             </div>
-            
-            <div class="flex bg-white/5 backdrop-blur-xl rounded-full p-0.5 border border-white/10">
-                <button onclick="setViewMode('immersive')" id="btn-immersive" class="p-1.5 rounded-full transition-all bg-white text-black">
-                    <i data-lucide="layers" class="w-3 h-3"></i>
-                </button>
-                <button onclick="setViewMode('index')" id="btn-index" class="p-1.5 rounded-full transition-all text-white/40 hover:text-white">
-                    <i data-lucide="layout-grid" class="w-3 h-3"></i>
-                </button>
-            </div>
         </div>
         
         <div id="nav-tabs" class="hidden lg:flex bg-white/5 backdrop-blur-xl rounded-full p-0.5 border border-white/10">
@@ -103,7 +90,7 @@
 
     <!-- Main Content -->
     <main id="main-content" class="relative z-10">
-        <!-- Views injected by JS -->
+        <!-- Content injected by JS -->
     </main>
 
     <!-- Progress Bar -->
@@ -113,29 +100,199 @@
     <script>
         const INITIAL_DATA = {
             movies: [
-                { id: 'm1', title: "A Nice Indian Boy", year: "Cinema", rating: 5, url: "#", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1920", review: "I was laughing out loud throughout this entire movie.", quotes: ["Are you waiting for a big speech to make you stay?", "It's 2024, the world is burning!"] },
-                { id: 'm2', title: "Tetris", year: "Cinema", rating: 4.5, url: "#", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1920", review: "This movie fucking slaps. Suits doing capitalism." },
-                { id: 'm3', title: "Sorry, Baby", year: "Cinema", rating: 4.5, url: "#", image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1920", review: "The cinematography was incredible." },
-                { id: 'm4', title: "Bugonia", year: "Cinema", rating: 4, url: "#", image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=1920", review: "Diversify the words of the diversity training." },
-                { id: 'm5', title: "Eddington", year: "Cinema", rating: 4, url: "#", image: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=1920", review: "Be nicer to each other." }
+                {
+                    id: 'm1',
+                    title: "A Nice Indian Boy",
+                    year: "Cinema",
+                    rating: 5,
+                    url: "https://letterboxd.com/delacruzp/film/a-nice-indian-boy/",
+                    image: "/img/2025-m1.png",
+                    review: `I was laughing out loud through out this entire movie. The only moments when I was not laughing it was, because I was aggressively sobbing.
+
+I must admit I was apprehensive going into this movie. But everything about it was SO f-ing good. Every single joke landed, my entire movie theater was enjoying the movie, which made the whole experience that more enjoyable.
+
+I think it's my first time watching a movie, where the relationship with the parents it's not a zero sum game. It's not all in, neither all out. It's hard, complicated, awkward and at time sad, and still they keep trying to make it work.
+
+I loved the splitting the movie into chapters. Love the way it tell the stories. Both the cutaways from the date, to the discussion of the date, and back. The sister narration. Ugh I love this movie.
+
+Scenes where I cried:
+• Naveen saying that of course he wants a wedding and love, and all the nice things.
+• The mom saying that she was scared to say the wrong thing, and lose her kid forever.
+• The dad saying that his kid has good taste.`,
+                    quotes: [
+                        "Are you waiting for a big speech to make you stay? Cuz I wont have one.",
+                        "I know, I'm the dramatic one.",
+                        "I don't want to hear sweeping notions of love. It's 2024, the world is burning!",
+                        "We think it's wonderful that you're White.",
+                    ]
+                },
+                {
+                    id: 'm2',
+                    title: "Tetris",
+                    year: "Cinema",
+                    rating: 4.5,
+                    url: "https://letterboxd.com/delacruzp/film/tetris/",
+                    image: "/img/2025-m2.png",
+                    review: `This movie fucking slaps.
+
+Who knew watching suits do capitalism could be that entertaining. 
+
+Now let me go and play some tetris.`},
+                {
+                    id: 'm3',
+                    title: "Sorry, Baby",
+                    year: "Cinema",
+                    rating: 4.5,
+                    url: "https://letterboxd.com/delacruzp/film/sorry-baby-2025/",
+                    image: "/img/2025-m3.png",
+                    review: `I really enjoyed this.
+
+Granted my expectations going into it where on the floor, but hey apparently that's the key to loving a movie.
+
+Things I loved:
+• The cinematography
+• The shot of them seating by the beach, with the afro backlit, and glowing like a halo.
+• The shot of the snow falling thorugh the window.
+• The Jokes
+• My dad is divorced.
+• Are you safe, in your home? Yes. I have a cat.
+• I'm gay, who would have guessed?
+Honestly, too many to list. Which is why I loved this.
+• The Plot
+• The sandwich scene.
+• The doctor asking questions without a tonal shift.
+• The baby scene.
+• The Acting
+
+Dude. I just loved this movie. Bye.` },
+                {
+                    id: 'm4',
+                    title: "Bugonia",
+                    year: "Cinema",
+                    rating: 4, url: "https://letterboxd.com/delacruzp/film/bugonia/",
+                    image: "/img/2025-m4.png",
+                    review: "Can you diversify, the words, of the diversity training?"
+                },
+                {
+                    id: 'm5',
+                    title: "Eddington",
+                    year: "Cinema",
+                    rating: 4,
+                    url: "https://letterboxd.com/delacruzp/film/eddington/",
+                    image: "/img/2025-m5.png",
+                    review: "So much could have been avoided if people were just nicer to each other."
+                }
             ],
             books: [
-                { id: 'b1', title: "Giovanni’s Room", year: "Literature", rating: 5, url: "#", image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=1920", quotes: ["Happiness was all we had."] },
-                { id: 'b2', title: "A Little Daylight Left", year: "2025", rating: 4, url: "#", image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&q=80&w=1920" },
-                { id: 'b3', title: "The Seven Moons of Maali Almeida", year: "2022", rating: 4, url: "#", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1920", review: "A difficult read, worth the effort." }
+                {
+                    id: 'b1',
+                    title: "Giovanni’s Room",
+                    year: "Literature",
+                    rating: 5,
+                    url: "https://www.goodreads.com/",
+                    image: "/img/2025-b1.png",
+                    quotes: [
+                        "Soon, it was too late to do anything but moan.",
+                        "Maybe everything bad that happens to you makes you weaker... so you can stand less and less.",
+                        "You will go home and then you will find that home is not home anymore. Then you will really be in trouble. As long as you stay here, you can always think: One day I will go home.",
+                        "It is cruel to have made me want to live only to make my death more bloody.",
+                        "You want to leave Giovanni because he makes you stink. You want to despise Giovanni because he is not afraid of the stink of love. You want to kill him in the name of all your lying little moralities. And you—you are immoral. You are, by far, the most immoral man I have met in all my life. Look, look what you have done to me.",
+                        "Be careful. Please be careful. He gave me an ironical smile. ‘Thank you’, he said, 'You should have given me that advice the night we met”",
+                        "What's the good of an American who isn't happy? Happiness was all we had.",
+                    ]
+                },
+                {
+                    id: 'b2',
+                    title: "A Little Daylight Left: Poems",
+                    year: "2025",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/215805885-a-little-daylight-left",
+                    image: "/img/2025-b2.webp",
+                },
+                {
+                    id: 'b3',
+                    title: "The Seven Moons of Maali Almeida",
+                    year: "2022",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/57224204-the-seven-moons-of-maali-almeida",
+                    image: "/img/2025-b3.png",
+                    review: `A difficult read, worth the effort, like all best things.
+
+I forgot how much I love a well thought-out story. A perfect ending is one of the few joys of life.
+
+This booked pushed me, in more ways than one. I got to learned about the Sri Lanka civil war, the racial conflicts in the other side of the world, names that my tongue struggles to pronounced and stories that although noveled, brought up familiar emotions.
+
+At the end of the day, the world keeps spinning, our efforts have a limited impact, our actions hurt our loved ones, but life is definitely not nothing.
+`,
+                    // quotes: [
+                    //     "- Despair always begins as a snack that you nibble on when bored and then becomes a meal that you have thrice a day.",
+                    //     "- That is the kindest thing you can say about life, It's not nothing.",
+                    //     "- Let's go to San Francisco and make money and love and let this shit country burn to the ground.",
+                    //     "- He was handsome and stout just the way you liked them, though you liked them many ways.",
+                    //     "- The one good thing you can say about a bomb is that it isn't racist or sexist or concerned about class.",
+                    //     "- Because a blow job isn't sex and it isn't sex if you don't see the other person's face and it doesn't count if you were thinking about him during it",
+                    //     "- Two promises are worth less than one.",
+                    //     "- Three promises are worth less than two.",
+                    //     "- We must all find pointless causes to live for, or why bother with breath?",
+                    //     "- How much money do you make? – I make what all the world's millionaires do not... What is that? – Enough.",
+                    //     "- We have fucked it up. All by ourselves.",
+                    //     "- She stares out the window and let water spills from her eyes. First a drop, then an eye full, then a fountain.",
+                    // ]
+                },
+                {
+                    id: 'b4',
+                    title: "Everything Is Tuberculosis: The History and Persistence of Our Deadliest Infection",
+                    year: "2025",
+                    rating: 4,
+                    url: "https://www.goodreads.com/book/show/220341389-everything-is-tuberculosis",
+                    image: "/img/2025-b4.jpg",
+                }
             ],
             essays: [
-                { id: 'e1', title: "The Goon Squad", author: "Daniel Kolitz", url: "#", image: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&q=80&w=1920", site: "Harpers", review: "Loneliness and porn's next frontier." },
-                { id: 'e2', title: "Peak Gay Sluttiness", author: "Steven Phillips-Horst", url: "#", image: "https://images.unsplash.com/photo-1526218626217-dc65a29bb444?auto=format&fit=crop&q=80&w=1920", site: "The Cut" }
+                {
+                    id: 'e1',
+                    title: "The Goon Squad",
+                    year: "Nov, 2025",
+                    author: "Daniel Kolitz",
+                    // rating: 4, 
+                    url: "https://harpers.org/archive/2025/11/the-goon-squad-daniel-kolitz-porn-masturbation-loneliness/",
+                    image: "/img/2025-e1.webp",
+                    site: "Harpers",
+                    review: "Loneliness, porn’s next frontier, and the dream of endless masturbation."
+                },
+                {
+                    id: 'e2',
+                    title: "We’ve Reached Peak Gay Sluttiness",
+                    year: "Aug 29, 2025",
+                    author: "Steven Phillips-Horst",
+                    url: "https://www.thecut.com/article/ghb-doxypep-sniffies-peak-gay-sluttiness-era-nyc.html",
+                    image: "/img/2025-e2.webp",
+                    site: "The Cut",
+                    review: "Party all weekend, hook up with anyone, never get an STD — or even a hangover. Who says nobody’s having sex anymore?"
+                },
+                {
+                    id: 'e3',
+                    title: "She Wanted to Save the World From A.I. Then the Killings Started.",
+                    year: "Jul 6, 2025",
+                    author: "Christopher Beam",
+                    url: "https://www.nytimes.com/2025/07/06/business/ziz-lasota-zizians-rationalists.html?smid=nytcore-android-share",
+                    image: "/img/2025-e3.webp",
+                    site: "NY Times",
+                    review: "At first, Ziz LaSota seemed much like any other philosophically inclined young tech aspirant. Now, she and her followers are in jail, six people are dead, and Rationalists are examining whether their ideas played a role."
+                },
+                {
+                    id: 'e4',
+                    title: "We Bought a 450-Pound Mystery Pallet Packed With Returned Goods From Amazon and Beyond. Here’s What We Found Inside.",
+                    year: "Nov 17, 2025",
+                    author: "Annemarie Conte",
+                    url: "https://www.nytimes.com/wirecutter/reviews/mystery-amazon-pallet-unboxing/",
+                    image: "/img/2025-e4.webp",
+                    site: "Wirecutter",
+                }
             ],
-            podcasts: [
-                { id: 'p1', title: "The Daily", year: "Podcast", rating: 5, url: "#", image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=1920", review: "The standard for journalism." }
-            ]
         };
 
         let activeTab = 'all';
-        let viewMode = 'immersive';
-        let activeId = null;
 
         function getFilteredData() {
             if (activeTab === 'all') {
@@ -146,25 +303,17 @@
             return INITIAL_DATA[activeTab].map(item => ({ ...item, contentType: activeTab.slice(0, -1) }));
         }
 
-        function setViewMode(mode) {
-            viewMode = mode;
-            document.body.classList.toggle('index-mode', mode === 'index');
-            document.getElementById('btn-immersive').className = `p-1.5 rounded-full transition-all ${mode === 'immersive' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`;
-            document.getElementById('btn-index').className = `p-1.5 rounded-full transition-all ${mode === 'index' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`;
-            document.getElementById('status-text').innerText = mode === 'immersive' ? 'V.01 SCROLL' : 'GRID OVERVIEW';
-            render();
-            if (mode === 'immersive') window.scrollTo(0, 0);
-        }
-
         function setActiveTab(tab) {
             activeTab = tab;
             render();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function handleIndexSelect(id) {
-            activeId = id;
-            setViewMode('immersive');
+        function scrollToId(targetId) {
+            const target = document.querySelector(`[data-id="${targetId}"]`);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
 
         function render() {
@@ -173,89 +322,85 @@
             const bgContainer = document.getElementById('bg-container');
             const navTabs = document.getElementById('nav-tabs');
             
-            // Render Tabs
             navTabs.innerHTML = ['all', 'movies', 'books', 'essays', 'podcasts'].map(tab => `
                 <button onclick="setActiveTab('${tab}')" class="px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-black scale-105' : 'text-white/60 hover:text-white'}">
                     ${tab}
                 </button>
             `).join('');
 
-            if (viewMode === 'immersive') {
-                bgContainer.style.display = 'block';
-                // Render Background Images
-                bgContainer.innerHTML = '<div class="absolute inset-0 bg-zinc-900"></div>' + data.map(item => `
-                    <div id="bg-${item.id}" class="background-image absolute inset-0 transition-opacity duration-[1500ms] ease-in-out opacity-0">
-                        <img src="${item.image}" class="w-full h-full object-cover scale-100">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30"></div>
-                        <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
-                    </div>
-                `).join('');
+            // Background Images (Immersive)
+            bgContainer.innerHTML = '<div class="absolute inset-0 bg-zinc-900"></div>' + data.map(item => `
+                <div id="bg-${item.id}" class="background-image absolute inset-0 transition-opacity duration-[1500ms] ease-in-out opacity-0">
+                    <img src="${item.image}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30"></div>
+                    <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
+                </div>
+            `).join('');
 
-                // Render Sections
-                main.innerHTML = `
-                    <div class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
-                            <span class="text-[25vw] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-transparent">25</span>
-                        </div>
-                        <div class="relative z-10 max-w-4xl space-y-6">
-                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-[8px] font-mono uppercase tracking-widest text-white/80">
-                                <i data-lucide="play" class="w-2.5 h-2.5"></i><span>Curated Archive</span>
-                            </div>
-                            <h1 class="text-5xl md:text-9xl font-bold tracking-tighter leading-[0.85] text-white mix-blend-overlay">A Year in <br> Motion.</h1>
-                            <p class="text-lg md:text-2xl font-light text-white/70 max-w-lg mx-auto leading-relaxed">The frames and fragments that defined the journey.</p>
-                        </div>
-                        <div class="absolute bottom-12 animate-bounce text-white/30"><i data-lucide="chevron-down"></i></div>
+            main.innerHTML = `
+                <!-- Landing Hero -->
+                <div class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
+                        <span class="text-[25vw] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-transparent">25</span>
                     </div>
-                    <div class="pb-32">
-                        ${data.map((item, index) => `
-                            <div class="section-trigger min-h-screen flex items-center p-6 md:p-24 relative z-10 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}" data-id="${item.id}">
-                                <div class="section-content max-w-2xl w-full">
-                                    <div class="flex items-center gap-4 mb-8">
-                                        <span class="px-4 py-1.5 bg-white text-black text-xs font-black uppercase tracking-widest">${item.contentType}</span>
-                                        ${item.rating ? `<div class="flex items-center gap-1 text-white font-mono text-sm"><i data-lucide="star" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></i> ${item.rating}/5</div>` : ''}
-                                    </div>
-                                    <h2 class="text-6xl md:text-8xl font-bold mb-6 tracking-tighter leading-[0.9] text-white mix-blend-difference">${item.title}</h2>
-                                    <div class="h-px bg-white/30 w-full mb-8"></div>
-                                    <p class="text-white/80 font-mono text-sm mb-8 uppercase tracking-widest">${item.author || item.site || item.year}</p>
-                                    ${item.review ? `<p class="text-xl md:text-2xl font-light leading-relaxed text-white mb-10">${item.review}</p>` : ''}
-                                    ${item.quotes ? `<div class="space-y-6 pl-6 border-l-2 border-white/20">${item.quotes.map(q => `<p class="text-lg italic text-white/70 font-serif">"${q}"</p>`).join('')}</div>` : ''}
-                                    <div class="mt-12">
-                                        <a href="${item.url}" target="_blank" class="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white text-white hover:text-black backdrop-blur-md rounded-full transition-all duration-300">
-                                            <span class="text-xs font-bold uppercase tracking-widest">Explore Item</span>
-                                            <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
-                                        </a>
+                    <div class="relative z-10 max-w-4xl space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-[8px] font-mono uppercase tracking-widest text-white/80">
+                            <i data-lucide="play" class="w-2.5 h-2.5"></i><span>Curated Archive</span>
+                        </div>
+                        <h1 class="text-5xl md:text-9xl font-bold tracking-tighter leading-[0.85] text-white mix-blend-overlay">A Year in <br> Motion.</h1>
+                        <p class="text-lg md:text-2xl font-light text-white/70 max-w-lg mx-auto leading-relaxed">The frames and fragments that defined the journey.</p>
+                    </div>
+                    <div class="absolute bottom-12 animate-bounce text-white/30"><i data-lucide="chevron-down"></i></div>
+                </div>
+
+                <!-- Tile Grid Section -->
+                <div class="min-h-screen flex py-20 px-2 md:px-4">
+                    <div class="w-full max-w-5xl mx-auto">
+                        <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 md:gap-2">
+                            ${data.map(item => `
+                                <div onclick="scrollToId('${item.id}')" class="group relative aspect-[3/3.5] overflow-hidden rounded-md bg-zinc-900 cursor-pointer border border-white/5 transition-all duration-300">
+                                    <img src="${item.image}" class="absolute inset-0 w-full h-full object-cover opacity-80 transition-all duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-90"></div>
+                                    <div class="absolute inset-0 p-1.5 flex flex-col justify-end">
+                                        <div class="flex items-center justify-between mb-0.5">
+                                            <span class="text-[5px] font-black uppercase tracking-tighter px-0.5 bg-white text-black leading-none">${item.contentType}</span>
+                                            ${item.rating ? `<div class="flex items-center gap-0.5 text-yellow-400"><i data-lucide="star" class="w-1.5 h-1.5 fill-yellow-400"></i><span class="text-[5px] font-mono text-white">${item.rating}</span></div>` : ''}
+                                        </div>
+                                        <h3 class="text-[7px] md:text-[8px] font-bold tracking-tight leading-[1.1] line-clamp-2 uppercase">${item.title}</h3>
                                     </div>
                                 </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-
-                setupObserver();
-            } else {
-                bgContainer.style.display = 'none';
-                main.innerHTML = `
-                    <div class="h-screen pt-20 pb-12 px-4 flex items-center overflow-hidden">
-                        <div class="w-full max-w-5xl mx-auto">
-                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
-                                ${data.map(item => `
-                                    <div onclick="handleIndexSelect('${item.id}')" class="group relative aspect-[3/4] overflow-hidden rounded-lg bg-zinc-900 cursor-pointer border border-white/5 hover:border-white/40 transition-all duration-300">
-                                        <img src="${item.image}" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-80"></div>
-                                        <div class="absolute inset-0 p-3 flex flex-col justify-end">
-                                            <div class="flex items-center justify-between mb-1">
-                                                <span class="text-[6px] font-black uppercase tracking-tighter px-1 py-0.5 bg-white text-black leading-none">${item.contentType}</span>
-                                                ${item.rating ? `<div class="flex items-center gap-0.5 text-yellow-400"><i data-lucide="star" class="w-1.5 h-1.5 fill-yellow-400"></i><span class="text-[6px] font-mono text-white">${item.rating}</span></div>` : ''}
-                                            </div>
-                                            <h3 class="text-[9px] md:text-[10px] font-bold tracking-tight leading-tight line-clamp-2 uppercase">${item.title}</h3>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
+                            `).join('')}
                         </div>
                     </div>
-                `;
-            }
+                </div>
+
+                <!-- Detailed Items Section -->
+                <div class="pb-32">
+                    ${data.map((item, index) => `
+                        <div class="section-trigger min-h-screen flex items-center p-6 md:p-24 relative z-10 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}" data-id="${item.id}">
+                            <div class="section-content max-w-2xl w-full">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <span class="px-4 py-1.5 bg-white text-black text-xs font-black uppercase tracking-widest">${item.contentType}</span>
+                                    ${item.rating ? `<div class="flex items-center gap-1 text-white font-mono text-sm"><i data-lucide="star" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></i> ${item.rating}/5</div>` : ''}
+                                </div>
+                                <h2 class="text-6xl md:text-8xl font-bold mb-6 tracking-tighter leading-[0.9] text-white mix-blend-difference">${item.title}</h2>
+                                <div class="h-px bg-white/30 w-full mb-8"></div>
+                                <p class="text-white/80 font-mono text-sm mb-8 uppercase tracking-widest">${item.author || item.site || item.year}</p>
+                                ${item.review ? `<p class="text-xl md:text-2xl font-light leading-relaxed text-white mb-10">${item.review}</p>` : ''}
+                                ${item.quotes ? `<div class="space-y-6 pl-6 border-l-2 border-white/20">${item.quotes.map(q => `<p class="text-lg italic text-white/70 font-serif">"${q}"</p>`).join('')}</div>` : ''}
+                                <div class="mt-12">
+                                    <a href="${item.url}" target="_blank" class="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white text-white hover:text-black backdrop-blur-md rounded-full transition-all duration-300">
+                                        <span class="text-xs font-bold uppercase tracking-widest">Explore Item</span>
+                                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            setupObserver();
             lucide.createIcons();
         }
 
@@ -265,20 +410,25 @@
                 entries.forEach(entry => {
                     const id = entry.target.getAttribute('data-id');
                     const content = entry.target.querySelector('.section-content');
-                    const bg = document.getElementById(`bg-${id}`);
+                    const bgWrapper = document.getElementById(`bg-${id}`);
+                    const bgImg = bgWrapper ? bgWrapper.querySelector('img') : null;
                     
                     if (entry.isIntersecting) {
                         content.classList.add('visible');
-                        if (bg) {
-                            bg.style.opacity = '1';
-                            bg.querySelector('img').style.transform = 'scale(1.1)';
+                        if (bgWrapper) {
+                            bgWrapper.style.opacity = '1';
+                            if (bgImg) bgImg.style.transform = 'scale(1.1)';
                         }
                         updateProgress(id);
                     } else {
                         content.classList.remove('visible');
-                        if (bg) {
-                            bg.style.opacity = '0';
-                            bg.querySelector('img').style.transform = 'scale(1)';
+                        if (bgWrapper) {
+                            bgWrapper.style.opacity = '0';
+                            setTimeout(() => {
+                                if (bgWrapper.style.opacity === '0' && bgImg) {
+                                    bgImg.style.transform = 'scale(1)';
+                                }
+                            }, 1500);
                         }
                     }
                 });
@@ -290,11 +440,12 @@
         function updateProgress(id) {
             const data = getFilteredData();
             const idx = data.findIndex(item => item.id === id);
+            if (idx === -1) return;
             const progress = ((idx + 1) / data.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+            const pb = document.getElementById('progress-bar');
+            if (pb) pb.style.width = `${progress}%`;
         }
 
-        // Initialize
         window.onload = () => {
             render();
             lucide.createIcons();
