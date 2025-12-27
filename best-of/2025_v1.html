@@ -459,7 +459,6 @@ Favorite Paragraphs:
 
             const progress = (scrollY / parseInt(document.getElementById('scroll-spacer').style.height)) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
-            // document.getElementById('z-plane-display').innerText = `Depth: ${Math.round(scrollY)}m`;
 
             const intro = document.getElementById('intro-heading');
             intro.style.opacity = Math.max(0, 1 - (scrollY / 1200));
@@ -480,11 +479,9 @@ Favorite Paragraphs:
                 
                 if (relativeZ > -900 && relativeZ < 7000) {
                     currentActiveType = header.title;
-                    // activeTheme = THEMES[header.title];
                 }
 
                 if (relativeZ > -2500 && relativeZ < 1000) {
-                    // currentActiveType = header.title;
                     activeTheme = THEMES[header.title];
                 }
             });
