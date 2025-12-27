@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 Annual Recap</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             background-color: #f1f5f9;
             overflow-x: hidden;
             margin: 0;
+            color: #1e293b;
         }
         .perspective-container {
-            perspective: 1000px;
+            perspective: 1200px;
             perspective-origin: center center;
         }
         .tunnel-scene {
@@ -25,15 +25,20 @@
             transform-style: preserve-3d;
             will-change: transform, opacity, filter;
         }
+        #bg-overlay {
+            transition: background-color 1.5s ease;
+        }
+        .outline-text {
+            -webkit-text-stroke: 1.5px rgba(30, 41, 59, 0.2);
+            color: transparent;
+            text-transform: uppercase;
+        }
         .selection-green::selection {
             background-color: #bbf7d0;
             color: #14532d;
         }
-        /* New style for the outlined 3D text */
-        .outline-text {
-            -webkit-text-stroke: 1px rgba(30, 41, 59, 0.3);
-            color: transparent;
-            text-shadow: none;
+        .card-inner:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -43,9 +48,11 @@
     <div id="scroll-spacer"></div>
 
     <!-- Fixed Viewport -->
-    <div class="fixed inset-0 overflow-hidden bg-slate-100">
-        <!-- Background elements -->
-        <div class="absolute inset-0 bg-gradient-to-b from-blue-50 to-white -z-20"></div>
+    <div class="fixed inset-0 overflow-hidden">
+        <!-- Dynamic Background Layer -->
+        <div id="bg-overlay" class="absolute inset-0 bg-slate-100 -z-20"></div>
+        
+        <!-- Subtle Grid -->
         <div id="grid-bg" class="absolute inset-0 opacity-20 -z-10" 
              style="background-image: radial-gradient(circle, #64748b 1px, transparent 1px); background-size: 80px 80px;">
         </div>
@@ -53,46 +60,45 @@
         <div class="perspective-container w-full h-full relative">
             <div id="tunnel-scene" class="tunnel-scene absolute inset-0 w-full h-full">
                 
-                <!-- Centered Heading -->
+                <!-- Intro Heading -->
                 <div id="intro-heading" class="absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full"
                      style="transform: translate3d(-50%, -50%, 0px);">
-                    <h1 class="text-6xl md:text-8xl font-black text-slate-800 tracking-tighter mb-4 opacity-80 leading-none">2025</h1>
-                    <p class="text-lg md:text-xl text-slate-500 uppercase tracking-[0.5em] font-medium leading-none">Annual Recap</p>
-                    <div class="mt-16 animate-bounce text-slate-400">
-                        <i data-lucide="arrow-down" class="mx-auto w-8 h-8"></i>
-                        <span class="text-xs uppercase tracking-widest mt-4 block font-bold">Scroll forward</span>
+                    <h1 class="text-8xl md:text-[12rem] font-black text-slate-800 tracking-tighter mb-4 opacity-90 leading-none italic">2025</h1>
+                    <p class="text-sm md:text-base text-slate-500 uppercase tracking-[1em] font-bold leading-none pl-[1em]">The Voyage</p>
+                    <div class="mt-24 animate-bounce text-slate-400">
+                        <i data-lucide="chevron-down" class="mx-auto w-10 h-10"></i>
                     </div>
                 </div>
 
                 <!-- Items will be injected here -->
                 <div id="items-container" class="absolute inset-0" style="transform-style: preserve-3d;"></div>
 
-                <!-- Ending -->
+                <!-- Outro -->
                 <div id="outro-heading" class="absolute top-1/2 left-1/2 text-center w-full" style="display: none;">
-                    <h2 class="text-4xl font-black text-slate-800">That's a wrap.</h2>
-                    <p class="text-slate-500 mt-2">See you in 2026.</p>
+                    <h2 class="text-6xl font-black text-slate-800 mb-6 tracking-tighter italic">End of Log.</h2>
+                    <p class="text-slate-400 uppercase tracking-[0.5em] text-xs font-bold">See you in 2026</p>
                 </div>
 
             </div>
         </div>
 
-        <!-- UI Overlays -->
-        <div class="fixed bottom-8 left-8 right-8 flex justify-between items-end pointer-events-none">
+        <!-- Progress UI -->
+        <div class="fixed bottom-10 left-10 right-10 flex justify-between items-end pointer-events-none">
             <div class="text-left">
-                <div id="active-category" class="text-[10px] font-bold text-green-600 uppercase tracking-[0.3em] mb-2 transition-opacity duration-300">Voyage Progress</div>
-                <div class="w-48 h-1 bg-slate-200 rounded-full overflow-hidden pointer-events-auto">
+                <div id="active-category" class="text-[10px] font-black text-green-600 uppercase tracking-[0.4em] mb-4 transition-all duration-700">Voyage Status</div>
+                <div class="w-64 h-1.5 bg-slate-200 rounded-full overflow-hidden pointer-events-auto border border-white/50 backdrop-blur-sm">
                     <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
-            <p id="z-plane-display" class="text-[10px] font-mono text-slate-400 bg-white/80 backdrop-blur px-2 py-1 rounded border border-slate-100">Z_PLANE: 0</p>
+            <p id="z-plane-display" class="text-[9px] font-mono text-slate-500 bg-white/80 backdrop-blur-xl px-4 py-2 rounded-full border border-slate-200 uppercase tracking-widest shadow-sm">Depth: 0m</p>
         </div>
     </div>
 
-    <!-- Modal Template -->
+    <!-- Modal Container -->
     <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-white/60 backdrop-blur-md" onclick="closeModal()"></div>
-        <div id="modal-content" class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
-            <!-- Dynamic content injected here -->
+        <div class="absolute inset-0 bg-white/80 backdrop-blur-2xl" onclick="closeModal()"></div>
+        <div id="modal-content" class="relative w-full max-w-xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col text-slate-800">
+            <!-- Modal data injected via JS -->
         </div>
     </div>
 
@@ -103,7 +109,7 @@
                 { "id": "m2", "title": "Tetris", "year": "Cinema", "rating": 4.5, "url": "https://letterboxd.com/delacruzp/film/tetris/", "image": "https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&q=80&w=800", "review": "This movie fucking slaps." },
                 { "id": "m3", "title": "Sorry, Baby", "year": "Cinema", "rating": 4.5, "url": "https://letterboxd.com/delacruzp/film/sorry-baby-2025/", "image": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=800", "review": "I really enjoyed this." },
                 { "id": "m4", "title": "Bugonia", "year": "Cinema", "rating": 4, "url": "https://letterboxd.com/delacruzp/film/bugonia/", "image": "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=800", "review": "Can you diversify, the words, of the diversity training?" },
-                { "id": "m5", "title": "Eddington", "year": "Cinema", "rating": 4, "url": "https://letterboxd.com/delacruzp/film/eddington/", "image": "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&q=80&w=800", "review": "So much could have been avoided if people were just nicer." }
+                { "id": "m5", "title": "Eddington", "year": "Cinema", "rating": 4, "url": "https://letterboxd.com/delacruzp/film/depth-of-field/", "image": "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&q=80&w=800", "review": "So much could have been avoided if people were just nicer." }
             ],
             "books": [
                 { "id": "b1", "title": "Giovanni’s Room", "year": "Literature", "rating": 5, "url": "https://www.goodreads.com/", "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800", "quotes": ["Soon, it was too late to do anything but moan.", "You want to leave Giovanni because he makes you stink."] },
@@ -117,10 +123,17 @@
             ]
         };
 
-        const Z_DISTANCE = 1000;
-        const INITIAL_OFFSET = 2500; 
-        const CATEGORY_GAP = 2000;  
-        const FOG_DEPTH = 4000;
+        const Z_DISTANCE = 1100;
+        const INITIAL_OFFSET = 3000; 
+        const CATEGORY_GAP = 2200;  
+        const FOG_DEPTH = 4500;
+
+        const THEMES = {
+            "intro": "#f1f5f9",
+            "movies": "#f8fafc",
+            "books": "#f0fdf4",
+            "essays": "#f1f5f9"
+        };
         
         let allItems = [];
         let categoryHeaders = [];
@@ -128,26 +141,20 @@
         function init() {
             let currentZ = -INITIAL_OFFSET;
 
-            ['movies', 'books', 'essays'].forEach(type => {
+            ['movies', 'books', 'essays'].forEach((type, idx) => {
                 categoryHeaders.push({
                     title: type,
-                    z: currentZ + (Z_DISTANCE * 0.5) 
+                    z: currentZ + (Z_DISTANCE * 0.5),
+                    index: idx + 1
                 });
-
                 currentZ -= CATEGORY_GAP;
-
-                INITIAL_DATA[type].forEach((item, idx) => {
-                    allItems.push({ 
-                        ...item, 
-                        type, 
-                        z: currentZ,
-                        categoryIndex: idx
-                    });
+                INITIAL_DATA[type].forEach((item, itemIdx) => {
+                    allItems.push({ ...item, type, z: currentZ, categoryIndex: itemIdx });
                     currentZ -= Z_DISTANCE;
                 });
             });
 
-            const totalHeight = Math.abs(currentZ) + (Z_DISTANCE * 2);
+            const totalHeight = Math.abs(currentZ) + (Z_DISTANCE * 4);
             document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
 
             const container = document.getElementById('items-container');
@@ -157,16 +164,15 @@
                 el.className = 'category-header absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full pointer-events-none';
                 el.id = `header-${idx}`;
                 el.style.transform = `translate3d(-50%, -50%, ${header.z}px)`;
-                // Updated style: Brutalist outlined text with a modern badge
                 el.innerHTML = `
-                    <div class="mb-4 flex items-center gap-4">
-                        <div class="h-[1px] w-12 bg-slate-300"></div>
-                        <span class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Section 0${idx+1}</span>
-                        <div class="h-[1px] w-12 bg-slate-300"></div>
+                    <div class="mb-4 flex items-center gap-6 opacity-40">
+                        <div class="h-px w-24 bg-slate-400"></div>
+                        <span class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500">Block 0${header.index}</span>
+                        <div class="h-px w-24 bg-slate-400"></div>
                     </div>
-                    <h2 class="outline-text text-8xl md:text-[12rem] font-black uppercase tracking-tighter leading-none select-none">${header.title}</h2>
-                    <div class="mt-6 px-4 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/60 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                        Archive Entry
+                    <h2 class="outline-text text-[10rem] md:text-[18rem] font-black tracking-tighter leading-none select-none">${header.title}</h2>
+                    <div class="mt-8 px-6 py-2 rounded-full border border-slate-200 bg-white/50 backdrop-blur-md text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">
+                        Archive Section
                     </div>
                 `;
                 container.appendChild(el);
@@ -188,14 +194,14 @@
 
         function createItemElement(item, index) {
             const el = document.createElement('div');
-            el.className = 'tunnel-item absolute top-1/2 left-1/2 w-64 -ml-32 -mt-40 cursor-pointer transition-transform duration-300';
+            el.className = 'tunnel-item absolute top-1/2 left-1/2 w-80 -ml-40 -mt-56 cursor-pointer group';
             el.id = `item-${index}`;
             
-            const seed = index * 234.56;
+            const seed = index * 456.78;
             const angle = seed % (2 * Math.PI);
-            const radius = 250 + (seed % 350);
+            const radius = 300 + (seed % 450);
             const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius * 0.7;
+            const y = Math.sin(angle) * radius * 0.8;
 
             el.dataset.x = x;
             el.dataset.y = y;
@@ -203,19 +209,26 @@
             el.dataset.type = item.type;
 
             el.innerHTML = `
-                <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-white transform hover:rotate-1 transition-transform duration-300">
-                    <div class="h-40 bg-slate-200 relative">
-                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
-                        <div class="absolute top-2 right-2 bg-black/50 backdrop-blur text-[8px] text-white px-2 py-1 rounded-md uppercase font-bold tracking-widest">
-                            ${item.type}
+                <div class="card-inner w-full h-[450px] bg-white rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden border border-slate-200 transition-all duration-700 group-hover:scale-[1.03] group-hover:border-green-400 relative">
+                    <!-- Edge-to-edge Image -->
+                    <img src="${item.image}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 group-hover:opacity-100">
+                    
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent"></div>
+                    
+                    <!-- Content Overlay -->
+                    <div class="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start text-left">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-green-500 text-[9px] font-black text-white px-2.5 py-1 rounded uppercase tracking-tighter">
+                                ${item.type}
+                            </span>
+                            <span class="text-[9px] font-bold text-white/60 uppercase tracking-widest">${item.id}</span>
                         </div>
-                    </div>
-                    <div class="p-4 bg-white">
-                        <h3 class="font-bold text-slate-800 text-lg leading-tight truncate">${item.title}</h3>
-                        <div class="flex items-center justify-between mt-2">
-                             <p class="text-[10px] text-slate-400 uppercase tracking-wider">Ref: 2025-${item.id}</p>
-                             <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                        </div>
+                        <h3 class="font-black text-white text-3xl leading-none tracking-tighter mb-2 group-hover:text-green-400 transition-colors uppercase italic italic">
+                            ${item.title}
+                        </h3>
+                        <div class="h-0.5 w-8 bg-green-400 rounded-full transition-all duration-500 group-hover:w-full opacity-0 group-hover:opacity-100"></div>
+                        <p class="mt-4 text-[10px] text-white/70 font-bold uppercase tracking-[0.2em] group-hover:text-white transition-colors">Open Documentation —></p>
                     </div>
                 </div>
             `;
@@ -227,38 +240,40 @@
         function handleScroll() {
             const scrollY = window.scrollY;
             const scene = document.getElementById('tunnel-scene');
-            const totalHeight = parseInt(document.getElementById('scroll-spacer').style.height);
+            const bgOverlay = document.getElementById('bg-overlay');
             
             scene.style.transform = `translateZ(${scrollY}px)`;
-            document.getElementById('grid-bg').style.transform = `translateZ(0) translateY(${-scrollY * 0.2}px)`;
+            document.getElementById('grid-bg').style.transform = `translateZ(0) translateY(${-scrollY * 0.1}px)`;
 
-            const progress = (scrollY / totalHeight) * 100;
+            const progress = (scrollY / parseInt(document.getElementById('scroll-spacer').style.height)) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('z-plane-display').innerText = `Z_PLANE: ${Math.round(scrollY)}`;
+            document.getElementById('z-plane-display').innerText = `Depth: ${Math.round(scrollY)}m`;
 
             const intro = document.getElementById('intro-heading');
-            const introOpacity = 1 - (scrollY / 800);
-            intro.style.opacity = Math.max(0, introOpacity);
+            intro.style.opacity = Math.max(0, 1 - (scrollY / 1200));
 
-            let currentActiveType = "Voyage Progress";
+            let currentActiveType = "Voyage Status";
+            let activeTheme = THEMES.intro;
 
             categoryHeaders.forEach((header, idx) => {
                 const el = document.getElementById(`header-${idx}`);
                 const relativeZ = header.z + scrollY;
                 let opacity = 0;
                 
-                if (relativeZ > 500) opacity = 0;
-                else if (relativeZ > 0) opacity = 1 - (relativeZ / 500);
-                else opacity = 1 - (Math.abs(relativeZ) / 2000);
+                if (relativeZ > 400) opacity = 0;
+                else if (relativeZ > 0) opacity = 1 - (relativeZ / 400);
+                else opacity = 1 - (Math.abs(relativeZ) / 2500);
 
                 el.style.opacity = Math.max(0, opacity);
                 
-                if (relativeZ > -1000 && relativeZ < 1000) {
+                if (relativeZ > -2500 && relativeZ < 1000) {
                     currentActiveType = header.title;
+                    activeTheme = THEMES[header.title];
                 }
             });
 
-            document.getElementById('active-category').innerText = currentActiveType;
+            bgOverlay.style.backgroundColor = activeTheme;
+            document.getElementById('active-category').innerText = `Active Node: ${currentActiveType}`;
 
             allItems.forEach((item, index) => {
                 const el = document.getElementById(`item-${index}`);
@@ -268,14 +283,14 @@
                 const relativeZ = z + scrollY;
 
                 let opacity = 0;
-                if (relativeZ > 200) opacity = 0;
-                else if (relativeZ > 0) opacity = 1 - (relativeZ / 200);
+                if (relativeZ > 250) opacity = 0;
+                else if (relativeZ > 0) opacity = 1 - (relativeZ / 250);
                 else if (relativeZ < -FOG_DEPTH) opacity = 0;
                 else opacity = 1 - (Math.abs(relativeZ) / FOG_DEPTH);
 
                 el.style.opacity = opacity;
                 el.style.display = opacity <= 0.01 ? 'none' : 'block';
-                el.style.filter = `blur(${Math.min(5, Math.abs(relativeZ) / 800)}px)`;
+                el.style.filter = `blur(${Math.min(10, Math.abs(relativeZ) / 800)}px)`;
                 el.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
             });
         }
@@ -286,34 +301,56 @@
             const typeIcon = item.type === 'movies' ? 'film' : item.type === 'books' ? 'book-open' : 'pen-tool';
 
             content.innerHTML = `
-                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-sm transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button onclick="closeModal()" class="absolute top-8 right-8 z-10 p-3 bg-white/80 hover:bg-white text-slate-800 rounded-full backdrop-blur-xl transition-all border border-slate-200 group">
+                    <i data-lucide="x" class="w-6 h-6 group-hover:rotate-90 transition-transform"></i>
                 </button>
-                <div class="h-48 shrink-0 relative">
+                <div class="h-80 shrink-0 relative">
                     <img src="${item.image}" class="w-full h-full object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
-                </div>
-                <div class="p-6 pt-0 overflow-y-auto">
-                    <div class="flex items-center gap-2 mb-2 text-green-600">
-                        <i data-lucide="${typeIcon}" class="w-4 h-4"></i>
-                        <span class="text-xs font-bold uppercase tracking-wider">${item.type}</span>
+                    <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                    <div class="absolute bottom-8 left-8 right-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="${typeIcon}" class="w-5 h-5 text-green-600"></i>
+                            <span class="text-xs font-black uppercase tracking-[0.4em] text-green-600">${item.type}</span>
+                        </div>
+                        <h2 class="text-5xl font-black text-slate-800 leading-none tracking-tighter italic">${item.title}</h2>
                     </div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-2 leading-tight">${item.title}</h2>
-                    <div class="flex items-center gap-3 text-sm text-slate-500 mb-6">
-                        <span>${item.year}</span>
+                </div>
+                <div class="p-10 pt-4 overflow-y-auto">
+                    <div class="flex flex-wrap items-center gap-6 text-[10px] text-slate-400 mb-10 border-b border-slate-100 pb-8 font-black uppercase tracking-widest">
+                        <div class="flex items-center gap-2">
+                             <span class="text-slate-300">Year:</span> <span>${item.year}</span>
+                        </div>
                         ${item.rating ? `
-                            <div class="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded text-green-700 font-bold">
-                                <span>${item.rating}</span> <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-300">Rating:</span>
+                                <div class="flex items-center gap-1.5 text-green-600">
+                                    <span>${item.rating}</span> <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                </div>
                             </div>
                         ` : ''}
-                        <a href="${item.url}" target="_blank" class="ml-auto flex items-center gap-1 text-slate-400 hover:text-green-600 transition-colors">
-                            Visit <i data-lucide="external-link" class="w-3 h-3"></i>
+                        <a href="${item.url}" target="_blank" class="ml-auto flex items-center gap-2 text-slate-800 hover:text-green-600 transition-colors bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+                            SOURCE <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                         </a>
                     </div>
-                    ${item.review ? `<div class="prose prose-sm prose-slate mb-6">${item.review}</div>` : ''}
+                    
+                    ${item.review ? `
+                        <div class="mb-10">
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-300 mb-4">Review</h4>
+                            <div class="text-slate-600 text-lg leading-relaxed font-medium">"${item.review}"</div>
+                        </div>
+                    ` : ''}
+                    
                     ${item.quotes ? `
-                        <div class="space-y-4">
-                            ${item.quotes.map(q => `<div class="pl-4 border-l-2 border-green-300 italic text-slate-600 text-sm">"${q}"</div>`).join('')}
+                        <div>
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-300 mb-6">Logs</h4>
+                            <div class="space-y-8">
+                                ${item.quotes.map(q => `
+                                    <div class="relative pl-8">
+                                        <div class="absolute left-0 top-1 bottom-1 w-1 bg-green-400 rounded-full"></div>
+                                        <div class="text-slate-500 text-base leading-relaxed italic">"${q}"</div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     ` : ''}
                 </div>
