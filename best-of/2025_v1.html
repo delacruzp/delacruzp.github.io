@@ -3,101 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recap '25 | A Year in Motion</title>
+    <title>2025 Annual Recap</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide-static/0.321.0/lucide.min.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:italic&display=swap');
-
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: black;
-            color: white;
+            background-color: #f1f5f9;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            margin: 0;
         }
-
-        .font-mono { font-family: 'JetBrains+Mono', monospace; }
-        .font-serif { font-family: 'Playfair+Display', serif; }
-
-        .grain-overlay {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 60;
-            opacity: 0.07;
-            mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        .perspective-container {
+            perspective: 1000px;
+            perspective-origin: center center;
         }
-
-        .background-image {
-            transition: opacity 1.5s ease-in-out;
-            will-change: opacity;
-        }
-
-        .background-image img {
-            transition: transform 10s linear;
+        .tunnel-scene {
+            transform-style: preserve-3d;
             will-change: transform;
         }
-
-        .section-content {
-            transition: all 1s ease-out;
-            opacity: 0;
-            transform: translateY(50px);
-            filter: blur(10px);
+        .tunnel-item {
+            transform-style: preserve-3d;
+            will-change: transform, opacity, filter;
         }
-
-        .section-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .selection-green::selection {
+            background-color: #bbf7d0;
+            color: #14532d;
         }
     </style>
 </head>
-<body>
-    <div class="grain-overlay"></div>
+<body class="selection-green">
 
-    <!-- Background Layer -->
-    <div id="bg-container" class="fixed inset-0 z-0">
-        <div class="absolute inset-0 bg-zinc-900"></div>
-    </div>
+    <!-- Scroll Spacer -->
+    <div id="scroll-spacer"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-[100] p-4 md:p-6 flex justify-between items-center mix-blend-difference text-white">
-        <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                <span class="font-bold tracking-tighter text-xs md:text-base uppercase">Recap '25</span>
+    <!-- Fixed Viewport -->
+    <div class="fixed inset-0 overflow-hidden bg-slate-100">
+        <!-- Background elements -->
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-50 to-white -z-20"></div>
+        <div id="grid-bg" class="absolute inset-0 opacity-20 -z-10" 
+             style="background-image: radial-gradient(circle, #64748b 1px, transparent 1px); background-size: 80px 80px;">
+        </div>
+
+        <div class="perspective-container w-full h-full relative">
+            <div id="tunnel-scene" class="tunnel-scene absolute inset-0 w-full h-full">
+                
+                <!-- Centered Heading -->
+                <div id="intro-heading" class="absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full"
+                     style="transform: translate3d(-50%, -50%, 0px);">
+                    <h1 class="text-6xl md:text-8xl font-black text-slate-800 tracking-tighter mb-4 opacity-80 leading-none">2025</h1>
+                    <p class="text-lg md:text-xl text-slate-500 uppercase tracking-[0.5em] font-medium leading-none">Annual Recap</p>
+                    <div class="mt-16 animate-bounce text-slate-400">
+                        <i data-lucide="arrow-down" class="mx-auto w-8 h-8"></i>
+                        <span class="text-xs uppercase tracking-widest mt-4 block font-bold">Scroll forward</span>
+                    </div>
+                </div>
+
+                <!-- Items will be injected here -->
+                <div id="items-container" class="absolute inset-0" style="transform-style: preserve-3d;"></div>
+
+                <!-- Ending -->
+                <div id="outro-heading" class="absolute top-1/2 left-1/2 text-center w-full" style="display: none;">
+                    <h2 class="text-4xl font-black text-slate-800">That's a wrap.</h2>
+                    <p class="text-slate-500 mt-2">See you in 2026.</p>
+                </div>
+
             </div>
         </div>
-        
-        <div id="nav-tabs" class="hidden lg:flex bg-white/5 backdrop-blur-xl rounded-full p-0.5 border border-white/10">
-            <!-- Tabs injected by JS -->
+
+        <!-- UI Overlays -->
+        <div class="fixed bottom-8 left-8 right-8 flex justify-between items-end pointer-events-none">
+            <div class="text-left">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Voyage Progress</div>
+                <div class="w-48 h-1 bg-slate-200 rounded-full overflow-hidden pointer-events-auto">
+                    <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+            <p id="z-plane-display" class="text-[10px] font-mono text-slate-400 bg-white/80 backdrop-blur px-2 py-1 rounded border border-slate-100">Z_PLANE: 0</p>
         </div>
-        
-        <div id="status-text" class="font-mono text-[8px] tracking-widest opacity-50 hidden sm:block uppercase">
-            V.01 SCROLL
+    </div>
+
+    <!-- Modal Template -->
+    <div id="modal-container" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-white/60 backdrop-blur-md" onclick="closeModal()"></div>
+        <div id="modal-content" class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
+            <!-- Dynamic content injected here -->
         </div>
-    </nav>
+    </div>
 
-    <!-- Main Content -->
-    <main id="main-content" class="relative z-10">
-        <!-- Content injected by JS -->
-    </main>
-
-    <!-- Progress Bar -->
-    <div id="progress-bar" class="fixed bottom-0 left-0 h-0.5 bg-white z-[100] transition-all duration-300 w-0"></div>
-
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
+        
         const INITIAL_DATA = {
             movies: [
                 {
@@ -292,164 +286,165 @@ At the end of the day, the world keeps spinning, our efforts have a limited impa
             ],
         };
 
-        let activeTab = 'all';
+        const Z_DISTANCE = 300;
+        const FOG_DEPTH = 4000;
+        let allItems = [];
 
-        function getFilteredData() {
-            if (activeTab === 'all') {
-                return Object.entries(INITIAL_DATA).flatMap(([type, items]) => 
-                    items.map(item => ({ ...item, contentType: type.slice(0, -1) }))
-                );
-            }
-            return INITIAL_DATA[activeTab].map(item => ({ ...item, contentType: activeTab.slice(0, -1) }));
+        // Initialize state
+        function init() {
+            // Flatten items
+            ['movies', 'books', 'essays'].forEach(type => {
+                INITIAL_DATA[type].forEach(item => {
+                    allItems.push({ ...item, type });
+                });
+            });
+
+            // Set spacer height
+            const totalHeight = (allItems.length + 3) * Z_DISTANCE;
+            document.getElementById('scroll-spacer').style.height = `${totalHeight}px`;
+
+            // Create item elements
+            const container = document.getElementById('items-container');
+            allItems.forEach((item, index) => {
+                const el = createItemElement(item, index);
+                container.appendChild(el);
+            });
+
+            // Set final heading position
+            const outro = document.getElementById('outro-heading');
+            outro.style.transform = `translate3d(-50%, -50%, ${-(allItems.length + 1) * Z_DISTANCE}px)`;
+            outro.style.display = 'block';
+
+            lucide.createIcons();
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
         }
 
-        function setActiveTab(tab) {
-            activeTab = tab;
-            render();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function scrollToId(targetId) {
-            const target = document.querySelector(`[data-id="${targetId}"]`);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-
-        function render() {
-            const data = getFilteredData();
-            const main = document.getElementById('main-content');
-            const bgContainer = document.getElementById('bg-container');
-            const navTabs = document.getElementById('nav-tabs');
+        function createItemElement(item, index) {
+            const el = document.createElement('div');
+            el.className = 'tunnel-item absolute top-1/2 left-1/2 w-64 -ml-32 -mt-40 cursor-pointer transition-transform duration-300';
+            el.id = `item-${index}`;
             
-            navTabs.innerHTML = ['all', 'movies', 'books', 'essays', 'podcasts'].map(tab => `
-                <button onclick="setActiveTab('${tab}')" class="px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-black scale-105' : 'text-white/60 hover:text-white'}">
-                    ${tab}
-                </button>
-            `).join('');
+            const itemZ = -(index + 1) * Z_DISTANCE;
+            const seed = index * 234.56;
+            const angle = seed % (2 * Math.PI);
+            const radius = 250 + (seed % 350);
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius * 0.7;
 
-            // Background Images (Immersive)
-            bgContainer.innerHTML = '<div class="absolute inset-0 bg-zinc-900"></div>' + data.map(item => `
-                <div id="bg-${item.id}" class="background-image absolute inset-0 transition-opacity duration-[1500ms] ease-in-out opacity-0">
-                    <img src="${item.image}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30"></div>
-                    <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
-                </div>
-            `).join('');
+            el.dataset.x = x;
+            el.dataset.y = y;
+            el.dataset.z = itemZ;
 
-            main.innerHTML = `
-                <!-- Landing Hero -->
-                <div class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
-                        <span class="text-[25vw] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-transparent">25</span>
+            el.innerHTML = `
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-4 border-white transform hover:rotate-1 transition-transform duration-300">
+                    <div class="h-40 bg-slate-200">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
                     </div>
-                    <div class="relative z-10 max-w-4xl space-y-6">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-[8px] font-mono uppercase tracking-widest text-white/80">
-                            <i data-lucide="play" class="w-2.5 h-2.5"></i><span>Curated Archive</span>
-                        </div>
-                        <h1 class="text-5xl md:text-9xl font-bold tracking-tighter leading-[0.85] text-white mix-blend-overlay">A Year in <br> Motion.</h1>
-                        <p class="text-lg md:text-2xl font-light text-white/70 max-w-lg mx-auto leading-relaxed">The frames and fragments that defined the journey.</p>
+                    <div class="p-4 bg-white">
+                        <h3 class="font-bold text-slate-800 text-lg leading-tight truncate">${item.title}</h3>
+                        <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider">${item.type}</p>
                     </div>
-                    <div class="absolute bottom-12 animate-bounce text-white/30"><i data-lucide="chevron-down"></i></div>
-                </div>
-
-                <!-- Tile Grid Section -->
-                <div class="min-h-screen flex py-20 px-2 md:px-4">
-                    <div class="w-full max-w-5xl mx-auto">
-                        <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 md:gap-2">
-                            ${data.map(item => `
-                                <div onclick="scrollToId('${item.id}')" class="group relative aspect-[3/3.5] overflow-hidden rounded-md bg-zinc-900 cursor-pointer border border-white/5 transition-all duration-300">
-                                    <img src="${item.image}" class="absolute inset-0 w-full h-full object-cover opacity-80 transition-all duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-90"></div>
-                                    <div class="absolute inset-0 p-1.5 flex flex-col justify-end">
-                                        <div class="flex items-center justify-between mb-0.5">
-                                            <span class="text-[5px] font-black uppercase tracking-tighter px-0.5 bg-white text-black leading-none">${item.contentType}</span>
-                                            ${item.rating ? `<div class="flex items-center gap-0.5 text-yellow-400"><i data-lucide="star" class="w-1.5 h-1.5 fill-yellow-400"></i><span class="text-[5px] font-mono text-white">${item.rating}</span></div>` : ''}
-                                        </div>
-                                        <h3 class="text-[7px] md:text-[8px] font-bold tracking-tight leading-[1.1] line-clamp-2 uppercase">${item.title}</h3>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detailed Items Section -->
-                <div class="pb-32">
-                    ${data.map((item, index) => `
-                        <div class="section-trigger min-h-screen flex items-center p-6 md:p-24 relative z-10 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}" data-id="${item.id}">
-                            <div class="section-content max-w-2xl w-full">
-                                <div class="flex items-center gap-4 mb-8">
-                                    <span class="px-4 py-1.5 bg-white text-black text-xs font-black uppercase tracking-widest">${item.contentType}</span>
-                                    ${item.rating ? `<div class="flex items-center gap-1 text-white font-mono text-sm"><i data-lucide="star" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></i> ${item.rating}/5</div>` : ''}
-                                </div>
-                                <h2 class="text-6xl md:text-8xl font-bold mb-6 tracking-tighter leading-[0.9] text-white mix-blend-difference">${item.title}</h2>
-                                <div class="h-px bg-white/30 w-full mb-8"></div>
-                                <p class="text-white/80 font-mono text-sm mb-8 uppercase tracking-widest">${item.author || item.site || item.year}</p>
-                                ${item.review ? `<p class="text-xl md:text-2xl font-light leading-relaxed text-white mb-10">${item.review}</p>` : ''}
-                                ${item.quotes ? `<div class="space-y-6 pl-6 border-l-2 border-white/20">${item.quotes.map(q => `<p class="text-lg italic text-white/70 font-serif">"${q}"</p>`).join('')}</div>` : ''}
-                                <div class="mt-12">
-                                    <a href="${item.url}" target="_blank" class="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white text-white hover:text-black backdrop-blur-md rounded-full transition-all duration-300">
-                                        <span class="text-xs font-bold uppercase tracking-widest">Explore Item</span>
-                                        <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
                 </div>
             `;
 
-            setupObserver();
+            el.addEventListener('click', () => openModal(item));
+            return el;
+        }
+
+        function handleScroll() {
+            const scrollY = window.scrollY;
+            const scene = document.getElementById('tunnel-scene');
+            const totalHeight = parseInt(document.getElementById('scroll-spacer').style.height);
+            
+            // Move scene
+            scene.style.transform = `translateZ(${scrollY}px)`;
+
+            // Update background parallax
+            document.getElementById('grid-bg').style.transform = `translateZ(0) translateY(${-scrollY * 0.2}px)`;
+
+            // Update Progress
+            const progress = (scrollY / totalHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('z-plane-display').innerText = `Z_PLANE: ${Math.round(scrollY)}`;
+
+            // Update Intro Opacity based on distance
+            const intro = document.getElementById('intro-heading');
+            const introOpacity = 1 - (scrollY / 500);
+            intro.style.opacity = Math.max(0, introOpacity);
+            intro.style.pointerEvents = introOpacity <= 0 ? 'none' : 'auto';
+
+            // Update each item visibility and blur
+            allItems.forEach((_, index) => {
+                const el = document.getElementById(`item-${index}`);
+                const z = parseFloat(el.dataset.z);
+                const x = parseFloat(el.dataset.x);
+                const y = parseFloat(el.dataset.y);
+                const relativeZ = z + scrollY;
+
+                let opacity = 0;
+                if (relativeZ > 200) opacity = 0;
+                else if (relativeZ > 0) opacity = 1 - (relativeZ / 200);
+                else if (relativeZ < -FOG_DEPTH) opacity = 0;
+                else opacity = 1 - (Math.abs(relativeZ) / FOG_DEPTH);
+
+                el.style.opacity = opacity;
+                el.style.display = opacity <= 0.01 ? 'none' : 'block';
+                el.style.filter = `blur(${Math.min(5, Math.abs(relativeZ) / 800)}px)`;
+                el.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+            });
+        }
+
+        function openModal(item) {
+            const container = document.getElementById('modal-container');
+            const content = document.getElementById('modal-content');
+            const typeIcon = item.type === 'movies' ? 'film' : item.type === 'books' ? 'book-open' : 'pen-tool';
+
+            content.innerHTML = `
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-sm transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <div class="h-48 shrink-0 relative">
+                    <img src="${item.image}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
+                </div>
+                <div class="p-6 pt-0 overflow-y-auto">
+                    <div class="flex items-center gap-2 mb-2 text-green-600">
+                        <i data-lucide="${typeIcon}" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider">${item.type}</span>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2 leading-tight">${item.title}</h2>
+                    <div class="flex items-center gap-3 text-sm text-slate-500 mb-6">
+                        <span>${item.year}</span>
+                        ${item.rating ? `
+                            <div class="flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded text-green-700 font-bold">
+                                <span>${item.rating}</span> <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                            </div>
+                        ` : ''}
+                        <a href="${item.url}" target="_blank" class="ml-auto flex items-center gap-1 text-slate-400 hover:text-green-600 transition-colors">
+                            Visit <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                    ${item.review ? `<div class="prose prose-sm prose-slate mb-6">${item.review}</div>` : ''}
+                    ${item.quotes ? `
+                        <div class="space-y-4">
+                            ${item.quotes.map(q => `<div class="pl-4 border-l-2 border-green-300 italic text-slate-600 text-sm">"${q}"</div>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            container.classList.remove('hidden');
             lucide.createIcons();
+            document.body.style.overflow = 'hidden';
         }
 
-        function setupObserver() {
-            const options = { threshold: 0.45, rootMargin: "-10% 0px -10% 0px" };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const id = entry.target.getAttribute('data-id');
-                    const content = entry.target.querySelector('.section-content');
-                    const bgWrapper = document.getElementById(`bg-${id}`);
-                    const bgImg = bgWrapper ? bgWrapper.querySelector('img') : null;
-                    
-                    if (entry.isIntersecting) {
-                        content.classList.add('visible');
-                        if (bgWrapper) {
-                            bgWrapper.style.opacity = '1';
-                            if (bgImg) bgImg.style.transform = 'scale(1.1)';
-                        }
-                        updateProgress(id);
-                    } else {
-                        content.classList.remove('visible');
-                        if (bgWrapper) {
-                            bgWrapper.style.opacity = '0';
-                            setTimeout(() => {
-                                if (bgWrapper.style.opacity === '0' && bgImg) {
-                                    bgImg.style.transform = 'scale(1)';
-                                }
-                            }, 1500);
-                        }
-                    }
-                });
-            }, options);
-
-            document.querySelectorAll('.section-trigger').forEach(s => observer.observe(s));
+        function closeModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
-        function updateProgress(id) {
-            const data = getFilteredData();
-            const idx = data.findIndex(item => item.id === id);
-            if (idx === -1) return;
-            const progress = ((idx + 1) / data.length) * 100;
-            const pb = document.getElementById('progress-bar');
-            if (pb) pb.style.width = `${progress}%`;
-        }
-
-        window.onload = () => {
-            render();
-            lucide.createIcons();
-        };
+        window.onload = init;
     </script>
 </body>
 </html>
