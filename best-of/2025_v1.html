@@ -106,9 +106,10 @@
                 <div id="intro-heading" class="absolute top-1/2 left-1/2 flex flex-col items-center justify-center text-center w-full"
                      style="transform: translate3d(-50%, -50%, 0px);">
                     <h1 class="text-8xl md:text-[12rem] font-black text-slate-800 tracking-tighter mb-4 opacity-90 leading-none italic">2025</h1>
-                    <p class="text-sm md:text-base text-slate-500 uppercase tracking-[1em] font-bold leading-none pl-[1em]">The Voyage</p>
+                    <p class="text-sm md:text-base text-slate-500 uppercase tracking-[1em] font-bold leading-none pl-[1em]">Memories</p>
                     <div class="mt-24 animate-bounce text-slate-400">
                         <i data-lucide="chevron-down" class="mx-auto w-10 h-10"></i>
+                        <span class="text-xs uppercase tracking-widest mt-4 block font-bold">Scroll forward</span>
                     </div>
                 </div>
 
@@ -384,9 +385,9 @@ Favorite Paragraphs:
 
         const THEMES = {
             "intro": "#f1f5f9",
-            "movies": "#f8fafc",
-            "books": "#f0fdf4",
-            "essays": "#f1f5f9"
+            "movies": "#f1f5f9",
+            "books": "#baf7e4",
+            "essays": "#c2e0ff"
         };
         
         let allItems = [];
@@ -454,8 +455,14 @@ Favorite Paragraphs:
             const seed = index * 456.78;
             const angle = seed % (2 * Math.PI);
             const radius = 300 + (seed % 450);
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius * 0.8;
+            var xFactor = 1.0;
+            var yFactor = 0.8;
+            if (window.width < window.height) {
+                xFactor = 0.8;
+                yFactor = 1.0;
+            }
+            const x = Math.cos(angle) * radius * xFactor;
+            const y = Math.sin(angle) * radius * yFactor;
 
             el.dataset.x = x;
             el.dataset.y = y;
@@ -508,7 +515,11 @@ Favorite Paragraphs:
             scene.style.transform = `translateZ(${scrollY}px)`;
             document.getElementById('grid-bg').style.transform = `translateZ(0) translateY(${-scrollY * 0.1}px)`;
 
-            const progress = (scrollY / parseInt(document.getElementById('scroll-spacer').style.height)) * 100;
+            const spacerEl = document.getElementById('scroll-spacer');
+            const spacerHeight = parseInt(spacerEl.style.height) || spacerEl.offsetHeight;
+            const maxScroll = Math.max(1, spacerHeight - window.innerHeight);
+            const rawProgress = (scrollY / maxScroll) * 100;
+            const progress = Math.min(100, Math.max(0, rawProgress));
             document.getElementById('progress-bar').style.width = `${progress}%`;
 
             const intro = document.getElementById('intro-heading');
@@ -530,9 +541,6 @@ Favorite Paragraphs:
                 
                 if (relativeZ > -900 && relativeZ < 7000) {
                     currentActiveType = header.title;
-                }
-
-                if (relativeZ > -2500 && relativeZ < 1000) {
                     activeTheme = THEMES[header.title];
                 }
             });
