@@ -1,7 +1,7 @@
 {
-  "name": "2025 Annual Recap",
-  "short_name": "Recap2025",
-  "start_url": "/",
+  "name": "2025 Memories",
+  "short_name": "2025",
+  "start_url": "/best-of/2025-memories.html",
   "scope": "/",
   "display": "fullscreen",
   "background_color": "#f1f5f9",
