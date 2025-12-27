@@ -91,6 +91,13 @@
             word-break: break-word;
         }
 
+        /* Stabilize viewport height on mobile using svh */
+        .fixed-viewport {
+            height: 100svh;
+            min-height: -webkit-fill-available;
+            width: 100%;
+        }
+
         /* Background image active state (when clicking an image item) */
         #bg-overlay.bg-image-active {
             background-size: cover;
@@ -107,7 +114,7 @@
     <div id="scroll-spacer"></div>
 
     <!-- Fixed Viewport -->
-    <div class="fixed inset-0 overflow-hidden">
+    <div class="fixed inset-0 overflow-hidden fixed-viewport">
         <!-- Dynamic Background Layer -->
         <div id="bg-overlay" class="absolute inset-0 bg-slate-100 -z-20"></div>
         
@@ -433,12 +440,12 @@ Favorite Paragraphs:
             "essays": "#c2e0ff",
             "images": "#f1f5f9",
         };
-        
+
         let allItems = [];
         let categoryHeaders = [];
 
         function init() {
-            let currentZ = -INITIAL_OFFSET;
+            let currentZ = -INITIAL_OFFSET; 
 
             ['movies', 'books', 'essays', 'images'].forEach((type, idx) => {
                 categoryHeaders.push({
