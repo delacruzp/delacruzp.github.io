@@ -82,6 +82,15 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
+
+        /* Background image active state (when clicking an image item) */
+        #bg-overlay.bg-image-active {
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-blend-mode: overlay;
+            transition: background-image 0.8s ease, background-color 0.8s ease;
+        }
     </style>
 </head>
 <body class="selection-green">
@@ -567,7 +576,10 @@ Favorite Paragraphs:
                 }
             });
 
-            bgOverlay.style.backgroundColor = activeTheme;
+            const bgOverlayEl = document.getElementById('bg-overlay');
+            if (!bgOverlayEl.dataset.imageActive) {
+                bgOverlayEl.style.backgroundColor = activeTheme;
+            }
             document.getElementById('active-category').innerText = `${currentActiveType}`;
 
             allItems.forEach((item, index) => {
@@ -596,17 +608,26 @@ Favorite Paragraphs:
             const typeIcon = item.type === 'movies' ? 'film' : item.type === 'books' ? 'book-open' : 'pen-tool';
 
             if (item.type === 'images') {
-                content.innerHTML = `
-                <button onclick="closeModal()" class="absolute top-8 right-8 z-10 p-3 bg-white/80 hover:bg-white text-slate-800 rounded-full backdrop-blur-xl transition-all border border-slate-200 group">
-                    <i data-lucide="x" class="w-6 h-6 group-hover:rotate-90 transition-transform"></i>
-                </button>
-                <div class="h-full w-full flex items-center justify-center bg-black/90">
-                    <img src="${item.image}" class="max-h-[80vh] max-w-full object-contain">
-                </div>
-                `;
-                container.classList.remove('hidden');
-                lucide.createIcons();
-                document.body.style.overflow = 'hidden';
+                // Toggle the site background to this image instead of opening the modal
+                const bg = document.getElementById('bg-overlay');
+                const isActive = bg.dataset.imageActive === '1';
+                const sameImage = bg.dataset.currentImage === item.image;
+                if (!isActive || !sameImage) {
+                    bg.dataset.imageActive = '1';
+                    bg.dataset.currentImage = item.image;
+                    bg.style.backgroundImage = `url('${item.image}')`;
+                    bg.classList.add('bg-image-active');
+                    // Make sure background color does not obscure the image
+                    bg.style.backgroundColor = 'transparent';
+                } else {
+                    // Toggle off
+                    delete bg.dataset.imageActive;
+                    delete bg.dataset.currentImage;
+                    bg.style.backgroundImage = '';
+                    bg.classList.remove('bg-image-active');
+                    // let handleScroll restore appropriate background color
+                    handleScroll();
+                }
                 return;
             }
 
