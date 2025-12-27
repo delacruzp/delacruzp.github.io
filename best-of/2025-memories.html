@@ -11,6 +11,11 @@
     <!-- iOS web app / status bar hints -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- PWA manifest & icons -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/img/icon-192.png">
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     <title>2025 Annual Recap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -748,6 +753,23 @@ Favorite Paragraphs:
         }
 
         window.onload = init;
+
+        // Register service worker for PWA offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(reg => {
+                console.log('ServiceWorker registered', reg);
+            }).catch(err => {
+                console.warn('ServiceWorker registration failed', err);
+            });
+        }
+
+        // basic beforeinstallprompt handler (developers can surface their own install UI)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            window.deferredPrompt = e; // store for later use
+            console.log('beforeinstallprompt fired');
+        });
     </script>
 </body>
 </html>
